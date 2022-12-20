@@ -18,5 +18,15 @@ private:
 
 };
 
+namespace cola {
+    class MetaProcessor {
+
+    };
+
+    struct MetaData{
+
+    };
+}
+
 
 #endif //GENERATORFRAMEWORK_COLARUNMANAGER_HH
