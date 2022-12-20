@@ -5,9 +5,7 @@
 #ifndef GENERATORFRAMEWORK_VGENERATOR_HH
 #define GENERATORFRAMEWORK_VGENERATOR_HH
 
-
 class VGenerator {
-
 };
 
 
