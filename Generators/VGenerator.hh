@@ -14,8 +14,7 @@ namespace cola {
     class VGenerator : VFilter{
     public:
         ~VGenerator() override = 0;
-
-        virtual EventData genEvent() = 0;
+        virtual EventData operator()() = 0;
     };
 
     inline VGenerator::~VGenerator() = default;
