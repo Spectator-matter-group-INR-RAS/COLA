@@ -14,6 +14,11 @@ public:
     virtual ~VConverter() = 0;
 };
 
+<<<<<<< HEAD
 } //cola
+=======
+inline VConverter::~VConverter()= default;
+
+>>>>>>> 84f3f67 (smth)
 
 #endif //GENERATORFRAMEWORK_VCONVERTER_HH
