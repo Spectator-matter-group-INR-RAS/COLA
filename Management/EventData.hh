@@ -1,0 +1,8 @@
+//
+// Created by alexsvetlichnyy on 20.12.22.
+//
+
+#ifndef GENERATORFRAMEWORK_EVENTDATA_HH
+#define GENERATORFRAMEWORK_EVENTDATA_HH
+
+#endif //GENERATORFRAMEWORK_EVENTDATA_HH
