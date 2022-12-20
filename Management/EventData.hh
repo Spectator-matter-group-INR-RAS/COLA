@@ -5,6 +5,7 @@
 #ifndef GENERATORFRAMEWORK_EVENTDATA_HH
 #define GENERATORFRAMEWORK_EVENTDATA_HH
 
+namespace cola {
 
 struct EventIniState{
     int a;
@@ -19,6 +20,6 @@ public:
     EventIniState iniState;
     EventParticles particles;
 };
-
+}
 
 #endif //GENERATORFRAMEWORK_EVENTDATA_HH
