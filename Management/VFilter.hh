@@ -1,14 +1,17 @@
-//
-// Created by alexsvetlichnyy on 20.12.22.
-//
-
 #ifndef GENERATORFRAMEWORK_VFILTER_HH
 #define GENERATORFRAMEWORK_VFILTER_HH
 
-class VFilter{
-public:
-    virtual ~VFilter() = 0;
-};
-inline VFilter::~VFilter() = default;
+// Virtual filter class to prevent code duplication
+
+namespace cola {
+
+    class VFilter{
+    public:
+        virtual ~VFilter() = 0;
+    };
+
+    inline VFilter::~VFilter() = default;
+
+} //cola
 
 #endif //GENERATORFRAMEWORK_VFILTER_HH

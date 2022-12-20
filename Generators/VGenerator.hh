@@ -1,32 +1,25 @@
-//
-// Created by alexsvetlichnyy on 20.12.22.
-//
-
 #ifndef GENERATORFRAMEWORK_VGENERATOR_HH
 #define GENERATORFRAMEWORK_VGENERATOR_HH
 
 #include "EventData.hh"
+#include "VFilter.hh"
+
+/*
+ * This is a virtual generator class. Generators are the first step of the MC simulation: they take data from existing
+ * files or encapsulate nucleus-nucleus collision generators.
+ */
 
 namespace cola {
 
     class VGenerator : VFilter{
     public:
-        virtual ~VGenerator() = 0;
-        virtual cola::EventData genEvent() = 0;
-    };
+        ~VGenerator() override = 0;
 
-    class GeneratorImp final : public VGenerator {
-    public:
-        GeneratorImp() = default;
-        ~GeneratorImp() = default;
-        cola::EventData genEvent() final {
-            return cola::EventData{{5}, {5}};
-        }
+        virtual EventData genEvent() = 0;
     };
 
     inline VGenerator::~VGenerator() = default;
 
 } //cola
-
 
 #endif //GENERATORFRAMEWORK_VGENERATOR_HH
