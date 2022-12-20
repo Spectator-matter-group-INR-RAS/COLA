@@ -1,5 +1,4 @@
 #include <iostream>
-#include "VFactory.hh"
 int main() {
-    auto intFact = cola::DInjection<int>().makeFactory();
+    std::cout<<"Somewhen i will work"<<std::endl;
 }
