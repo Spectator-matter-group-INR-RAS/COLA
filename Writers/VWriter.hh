@@ -6,7 +6,7 @@
 #define GENERATORFRAMEWORK_VWRITER_HH
 #include "../Management/EventData.hh"
 
-class VWriter {
+class VWriter : VFilter {
     virtual void operator()(cola::EventData) = 0;
     virtual ~VWriter() = 0;
 };

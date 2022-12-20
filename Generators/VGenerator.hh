@@ -9,7 +9,7 @@
 
 namespace cola {
 
-    class VGenerator {
+    class VGenerator : VFilter{
     public:
         virtual ~VGenerator() = 0;
         virtual cola::EventData genEvent() = 0;
