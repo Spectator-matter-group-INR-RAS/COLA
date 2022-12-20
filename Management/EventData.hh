@@ -6,19 +6,20 @@
 #define GENERATORFRAMEWORK_EVENTDATA_HH
 
 namespace cola {
-    class EventIniState {
 
-    };
+struct EventIniState{
+    int a;
+};
 
-    class EventParticles {
+struct EventParticles{
+    int a;
+};
 
-    };
-
-    class EventData {
-    public:
-        EventIniState iniState;
-        EventParticles particles;
-    };
+class EventData{
+public:
+    EventIniState iniState;
+    EventParticles particles;
+};
 }
 
 #endif //GENERATORFRAMEWORK_EVENTDATA_HH
