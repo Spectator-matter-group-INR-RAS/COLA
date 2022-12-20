@@ -1,20 +1,25 @@
-//
-// Created by alexsvetlichnyy on 20.12.22.
-//
-
 #ifndef GENERATORFRAMEWORK_VCONVERTER_HH
 #define GENERATORFRAMEWORK_VCONVERTER_HH
-#include "../Management/EventData.hh"
+
+#include "EventData.hh"
 #include "VFilter.hh"
+
+/*
+ * This is a virtual converter class. It is inherited by all filters that are in the middle of MC simulation.
+ * Converters are intended to transform data from previous steps using map and reduce methods.
+ */
 
 namespace cola {
 
     class VConverter : VFilter{
     public:
-        virtual cola::EventData operator()(cola::EventData data) = 0;
-        virtual ~VConverter() = 0;
+        ~VConverter() override = 0;
+
+        virtual EventData operator()(EventData data) = 0;
     };
 
     inline VConverter::~VConverter() = default;
-}
+
+} //cola
+
 #endif //GENERATORFRAMEWORK_VCONVERTER_HH

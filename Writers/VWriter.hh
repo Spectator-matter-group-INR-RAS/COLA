@@ -1,16 +1,25 @@
-//
-// Created by alexsvetlichnyy on 20.12.22.
-//
-
 #ifndef GENERATORFRAMEWORK_VWRITER_HH
 #define GENERATORFRAMEWORK_VWRITER_HH
-#include "../Management/EventData.hh"
 
-class VWriter : VFilter {
-    virtual void operator()(cola::EventData) = 0;
-    virtual ~VWriter() = 0;
-};
+#include "EventData.hh"
+#include "VFilter.hh"
 
-inline VWriter::~VWriter() = default;
+/*
+ * This is a virtual writer class. Writers are what the name suggests - they implement writing results into different
+ * data format
+ */
+
+namespace cola {
+
+    class VWriter : VFilter {
+    public:
+        ~VWriter() override = 0;
+
+        virtual void operator()(cola::EventData) = 0;
+    };
+
+    inline VWriter::~VWriter() = default;
+
+} //cola
 
 #endif //GENERATORFRAMEWORK_VWRITER_HH
