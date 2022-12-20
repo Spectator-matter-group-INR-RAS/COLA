@@ -7,22 +7,25 @@
 
 #include "EventData.hh"
 
-class VGenerator {
-public:
-    virtual ~VGenerator() = 0;
-    virtual EventData genEvent() = 0;
-};
+namespace cola {
 
-class GeneratorImp final : public VGenerator {
-public:
-    GeneratorImp() = default;
-    ~GeneratorImp() = default;
-    EventData genEvent() final {
-        return EventData{{5}, {5}};
-    }
-};
+    class VGenerator {
+    public:
+        virtual ~VGenerator() = 0;
+        virtual cola::EventData genEvent() = 0;
+    };
 
-inline VGenerator::~VGenerator() = default;
+    class GeneratorImp final : public VGenerator {
+    public:
+        GeneratorImp() = default;
+        ~GeneratorImp() = default;
+        cola::EventData genEvent() final {
+            return cola::EventData{{5}, {5}};
+        }
+    };
 
+    inline VGenerator::~VGenerator() = default;
+
+} //cola
 
 #endif //GENERATORFRAMEWORK_VGENERATOR_HH
