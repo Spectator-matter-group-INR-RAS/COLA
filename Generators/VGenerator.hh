@@ -5,7 +5,7 @@
 #include "VFilter.hh"
 
 /*
- * This is a virtual generator class. Generators are the first step of the MC simulation: they take data from existing
+ * This is a generator interface. Generators are the first step of the MC simulation: they take data from existing
  * files or encapsulate nucleus-nucleus collision generators.
  */
 

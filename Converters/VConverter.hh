@@ -5,7 +5,7 @@
 #include "VFilter.hh"
 
 /*
- * This is a virtual converter class. It is inherited by all filters that are in the middle of MC simulation.
+ * This is a converter interface. It is inherited by all filters that are in the middle of MC simulation.
  * Converters are intended to transform data from previous steps using map and reduce methods.
  */
 

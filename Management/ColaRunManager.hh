@@ -8,9 +8,9 @@
 #include <map>
 #include <memory>
 #include <functional>
-#include "../Generators/VGenerator.hh"
-#include "../Writers/VWriter.hh"
-#include "../Converters/VConverter.hh"
+#include "VGenerator.hh"
+#include "VWriter.hh"
+#include "VConverter.hh"
 #include "VFactory.hh"
 
 class ColaRunManager {
@@ -51,5 +51,6 @@ namespace cola {
         void regWrite(VFactory* factory, std::string name){writerMap.emplace(name, factory);}
     };
 
-}
+} //cola
+
 #endif //GENERATORFRAMEWORK_COLARUNMANAGER_HH

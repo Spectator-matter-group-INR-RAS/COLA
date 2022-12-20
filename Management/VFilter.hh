@@ -1,7 +1,7 @@
 #ifndef GENERATORFRAMEWORK_VFILTER_HH
 #define GENERATORFRAMEWORK_VFILTER_HH
 
-// Virtual filter class to prevent code duplication
+// Filter interface to prevent code duplication
 
 namespace cola {
 
