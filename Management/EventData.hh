@@ -6,12 +6,12 @@
 #define GENERATORFRAMEWORK_EVENTDATA_HH
 
 
-class EventIniState{
-
+struct EventIniState{
+    int a;
 };
 
-class EventParticles{
-
+struct EventParticles{
+    int a;
 };
 
 class EventData{
