@@ -12,11 +12,6 @@ class RunManager {
 public:
     RunManager();
     ~RunManager();
-    /*
-    void add(VGenerator generator,std::string fTypeMeta);
-    void add(VWriter writer, std::string fTypeMeta);
-    void add(VConverter converter, std::string fTypeMeta);*/
-
 private:
 
 
