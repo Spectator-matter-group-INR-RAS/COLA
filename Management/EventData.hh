@@ -70,6 +70,7 @@ namespace cola {
 
     //A and Z of an ion
     typedef std::pair<unsigned short, unsigned short> AZ;
+
 } //cola
 
 #endif //GENERATORFRAMEWORK_EVENTDATA_HH

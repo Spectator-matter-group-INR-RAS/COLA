@@ -5,7 +5,7 @@
 #include "VFilter.hh"
 
 /*
- * This is a virtual writer class. Writers are what the name suggests - they implement writing results into different
+ * This is a wrtier interface. Writers are what the name suggests - they implement writing results into different
  * data format
  */
 
