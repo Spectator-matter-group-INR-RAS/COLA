@@ -5,4 +5,20 @@
 #ifndef GENERATORFRAMEWORK_EVENTDATA_HH
 #define GENERATORFRAMEWORK_EVENTDATA_HH
 
+
+class EventIniState{
+
+};
+
+class EventParticles{
+
+};
+
+class EventData{
+public:
+    EventIniState iniState;
+    EventParticles particles;
+};
+
+
 #endif //GENERATORFRAMEWORK_EVENTDATA_HH
