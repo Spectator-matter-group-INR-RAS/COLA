@@ -28,4 +28,5 @@ namespace cola {
 
 } //cola
 
+
 #endif //GENERATORFRAMEWORK_VGENERATOR_HH
