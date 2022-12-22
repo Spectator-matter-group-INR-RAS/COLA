@@ -29,10 +29,16 @@ namespace cola {
 
     class MetaProcessor {
     public:
+        MetaProcessor() = default;
+        ~MetaProcessor();
         void reg(VFactory* factory, std::string name, std::string type);
         FilterAnsamble parse(MetaData data);
 
     private:
+        VGenerator* gen;
+        VConverter* conv;
+        VWriter* write;
+
         std::map<std::string, VFactory*> generatorMap;
         std::map<std::string, VFactory*> converterMap;
         std::map<std::string, VFactory*> writerMap;
