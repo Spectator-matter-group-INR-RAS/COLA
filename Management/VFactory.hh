@@ -14,7 +14,6 @@ namespace cola {
     class VFactory{
     public:
         virtual ~VFactory();
-
         virtual std::unique_ptr<VFilter> create() = 0;
     };
 
