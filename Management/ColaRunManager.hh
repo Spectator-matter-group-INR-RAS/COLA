@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <functional>
+#include <utility>
 #include "VGenerator.hh"
 #include "VWriter.hh"
 #include "VConverter.hh"
@@ -22,17 +23,18 @@ namespace cola {
     };
 
     struct FilterAnsamble{
-        std::shared_ptr<std::function<EventData()>> generator;
-        std::shared_ptr<std::function<EventData(EventData)>> converter;
-        std::shared_ptr<std::function<void(EventData)>> writer;
+        std::unique_ptr<VGenerator> generator;
+        std::unique_ptr<VConverter> converter;
+        std::unique_ptr<VWriter> writer;
     };
 
-    class MetaProcessor {
+    class MetaProcessor { //TODO: make everything initialise in constructor
     public:
         MetaProcessor() = default;
         ~MetaProcessor();
-        void reg(VFactory* factory, std::string name, std::string type);
-        FilterAnsamble parse(MetaData data);
+
+        void reg(VFactory* factory, const std::string& name, const std::string& type);
+        FilterAnsamble parse(const MetaData& data);
 
     private:
         VGenerator* gen;
@@ -43,15 +45,15 @@ namespace cola {
         std::map<std::string, VFactory*> converterMap;
         std::map<std::string, VFactory*> writerMap;
 
-        void regGen(VFactory* factory, std::string name){generatorMap.emplace(name, factory);}
-        void regConv(VFactory* factory, std::string name){converterMap.emplace(name, factory);}
-        void regWrite(VFactory* factory, std::string name){writerMap.emplace(name, factory);}
+        void regGen(VFactory* factory, const std::string& name){generatorMap.emplace(name, factory);}
+        void regConv(VFactory* factory, const std::string& name){converterMap.emplace(name, factory);}
+        void regWrite(VFactory* factory, const std::string& name){writerMap.emplace(name, factory);}
     };
 
     class ColaRunManager {
     public:
-        ColaRunManager(FilterAnsamble ansamble){filterAnsamble = ansamble;};
-        ~ColaRunManager();
+        explicit ColaRunManager(FilterAnsamble&& ansamble) : filterAnsamble(std::move(ansamble)) {}
+        ~ColaRunManager() = default;
         void run();
     private:
         FilterAnsamble filterAnsamble;
