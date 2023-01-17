@@ -8,18 +8,15 @@ cola::MetaProcessor::~MetaProcessor() {
 delete write; delete conv; delete gen;
 }
 
-cola::FilterAnsamble cola::MetaProcessor::parse(cola::MetaData data) {
+cola::FilterAnsamble cola::MetaProcessor::parse(const cola::MetaData& data) {
     FilterAnsamble ansamble;
-    gen = dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create().get());
-    ansamble.generator = std::make_shared<std::function<EventData()>>([&](){return (*gen)();});
-    conv = dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create().get());
-    ansamble.converter = std::make_shared<std::function<EventData(EventData)>>([&](EventData  eventData){return (*conv)(eventData);});
-    write = dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create().get());
-    ansamble.writer = std::make_shared<std::function<void(EventData)>>([&](EventData eventData){return (*write)(eventData);});
+    ansamble.generator = std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create().get()));
+    ansamble.converter = std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create().get()));
+    ansamble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create().get()));
     return ansamble;
 }
 
-void cola::MetaProcessor::reg(cola::VFactory *factory, std::string name, std::string type) {
+void cola::MetaProcessor::reg(cola::VFactory *factory, const std::string& name, const std::string& type) {
     if(type == "generator"){ regGen(factory, name);}
     else if(type == "converter"){ regConv(factory, name);}
     else if(type == "writer"){ regWrite(factory, name);}

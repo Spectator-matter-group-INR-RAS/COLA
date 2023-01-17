@@ -11,7 +11,7 @@
 
 namespace cola {
 
-    class VConverter : VFilter{
+    class VConverter : public VFilter{
     public:
         ~VConverter() override = 0;
 

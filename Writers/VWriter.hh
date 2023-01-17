@@ -5,13 +5,13 @@
 #include "VFilter.hh"
 
 /*
- * This is a wrtier interface. Writers are what the name suggests - they implement writing results into different
+ * This is a writer interface. Writers are what the name suggests - they implement writing results into different
  * data format
  */
 
 namespace cola {
 
-    class VWriter : VFilter {
+    class VWriter : public VFilter {
     public:
         ~VWriter() override = 0;
 

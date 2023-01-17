@@ -11,9 +11,10 @@
 
 namespace cola {
 
-    class VGenerator : VFilter{
+    class VGenerator : public VFilter{
     public:
         ~VGenerator() override = 0;
+
         virtual EventData operator()() = 0;
     };
 
