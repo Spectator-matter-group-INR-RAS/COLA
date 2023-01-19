@@ -31,23 +31,19 @@ namespace cola {
     class MetaProcessor { //TODO: make everything initialise in constructor
     public:
         MetaProcessor() = default;
-        ~MetaProcessor();
+        ~MetaProcessor() = default;
 
-        void reg(VFactory* factory, const std::string& name, const std::string& type);
+        void reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type);
         FilterAnsamble parse(const MetaData& data);
 
     private:
-        VGenerator* gen;
-        VConverter* conv;
-        VWriter* write;
+        std::map<std::string, std::shared_ptr<VFactory>> generatorMap;
+        std::map<std::string, std::shared_ptr<VFactory>> converterMap;
+        std::map<std::string, std::shared_ptr<VFactory>> writerMap;
 
-        std::map<std::string, VFactory*> generatorMap;
-        std::map<std::string, VFactory*> converterMap;
-        std::map<std::string, VFactory*> writerMap;
-
-        void regGen(VFactory* factory, const std::string& name){generatorMap.emplace(name, factory);}
-        void regConv(VFactory* factory, const std::string& name){converterMap.emplace(name, factory);}
-        void regWrite(VFactory* factory, const std::string& name){writerMap.emplace(name, factory);}
+        void regGen(std::shared_ptr<VFactory>&& factory, const std::string& name){generatorMap.emplace(name, std::move(factory));}
+        void regConv(std::shared_ptr<VFactory>&& factory, const std::string& name){converterMap.emplace(name, std::move(factory));}
+        void regWrite(std::shared_ptr<VFactory>&& factory, const std::string& name){writerMap.emplace(name, std::move(factory));}
     };
 
     class ColaRunManager {
