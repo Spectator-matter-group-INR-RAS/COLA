@@ -14,7 +14,7 @@ namespace cola {
     class VFactory{
     public:
         virtual ~VFactory();
-        virtual std::unique_ptr<VFilter> create() = 0;
+        virtual VFilter* create() = 0;      //the pointer is passed to unique_ptr constructor, therefore no leaks are possible
     };
 
     inline VFactory::~VFactory() = default;
