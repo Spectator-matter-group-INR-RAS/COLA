@@ -2,6 +2,7 @@
 #define GENERATORFRAMEWORK_EVENTDATA_HH
 
 #include <vector>
+#include <cmath>
 
 /*
  * A collection of DTOs and utility functions used in the pipeline
@@ -56,7 +57,7 @@ namespace cola {
         double pY;
         double pZ;
 
-        unsigned short pdgCode;
+        int pdgCode;
         ParticleClass pClass;
     };
 
@@ -70,6 +71,25 @@ namespace cola {
 
     //A and Z of an ion
     typedef std::pair<unsigned short, unsigned short> AZ;
+
+    //converters
+    AZ pdgToAZ (int pdgCode) {
+        AZ data = {0, 0};
+        pdgCode /=10;
+        for (int i = 0; i < 3; i++) {
+            data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+            pdgCode /= 10;
+        }
+        for (int i = 0; i < 3; i++) {
+            data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+            pdgCode /= 10;
+        }
+        return data;
+    }
+
+    int AZToPdg(AZ data) {
+        return 1000000000 + data.first * 10 + data.second * 10000;
+    }
 
 } //cola
 
