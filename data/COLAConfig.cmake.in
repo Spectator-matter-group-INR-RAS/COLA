@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+include(${CMAKE_CURRENT_LIST_DIR}/COLA.cmake)
+set_and_check(COLA_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
