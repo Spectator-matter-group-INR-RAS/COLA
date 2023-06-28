@@ -21,7 +21,7 @@ namespace cola {
         spectatorB
     };
 
-    //initial nuclei nad kinematics, diagnostical information
+    //initial nuclei nad kinematics, diagnostics information
     struct EventIniState{
         unsigned short pdgCodeA;
         unsigned short pdgCodeB;
