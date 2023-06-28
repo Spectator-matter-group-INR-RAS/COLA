@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_library(COLAlib INTERFACE)
 target_include_directories(COLAlib INTERFACE
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
-        $<INSTALL_INTERFACE:api>)
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
 
-set_target_properties(COLAlib PROPERTIES PUBLIC_HEADER "api/COLA.hh")
+set_target_properties(COLAlib PROPERTIES PUBLIC_HEADER "include/COLA.hh")
 
 if(NOT INSTALL_DIR)
     set(INSTALL_DIR ${PROJECT_SOURCE_DIR}/install)
@@ -16,7 +16,7 @@ endif()
 
 install(TARGETS COLAlib
         EXPORT COLA
-        PUBLIC_HEADER DESTINATION ${INSTALL_DIR}/api)
+        PUBLIC_HEADER DESTINATION ${INSTALL_DIR}/include)
 
 include(CMakePackageConfigHelpers)
 
