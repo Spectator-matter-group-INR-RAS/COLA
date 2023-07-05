@@ -156,6 +156,9 @@ namespace cola {
     inline cola::EventData operator|(std::shared_ptr<cola::VGenerator> generator, std::shared_ptr<cola::VConverter> converter){
         return (*converter)((*generator)());
     }
+    inline cola::EventData operator|(cola::EventData data, std::shared_ptr<cola::VConverter> converter){
+        return (*converter)(data);
+    }
     inline void operator|(cola::EventData data, std::shared_ptr<cola::VWriter> writer){
         (*writer)(data);
     }
@@ -228,7 +231,7 @@ namespace cola {
         auto g = std::shared_ptr<VGenerator>(filterAnsamble.generator.get());
         auto c = std::shared_ptr<VConverter>(filterAnsamble.converter.get());
         auto w = std::shared_ptr<VWriter>(filterAnsamble.writer.get());
-        g | c | w;
+        g | c | c | w;
     }
 } //cola
 
