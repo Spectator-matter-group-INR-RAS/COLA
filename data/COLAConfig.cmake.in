@@ -1,4 +1,0 @@
-@PACKAGE_INIT@
-
-include(@CMAKE_INSTALL_PREFIX@/cmake/COLA.cmake)
-set_and_check(COLA_INCLUDE_DIR @CMAKE_INSTALL_PREFIX@/include)
