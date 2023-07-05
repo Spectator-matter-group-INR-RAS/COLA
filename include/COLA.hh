@@ -144,11 +144,6 @@ namespace cola {
 
     inline VWriter::~VWriter() = default;
 
-    /*
-     * This is a factory interface. Factories are classes used to create desired instances of filters. This abstraction
-     * is required to implement dependency injection. Factories are registered in the metaprocessor class
-     */
-
     class VFactory{
     public:
         virtual ~VFactory();
@@ -156,6 +151,14 @@ namespace cola {
     };
 
     inline VFactory::~VFactory() = default;
+
+
+    inline cola::EventData operator|(std::shared_ptr<cola::VGenerator> generator, std::shared_ptr<cola::VConverter> converter){
+        return (*converter)((*generator)());
+    }
+    inline void operator|(cola::EventData data, std::shared_ptr<cola::VWriter> writer){
+        (*writer)(data);
+    }
 
 
     /* ----------------------- MANAGER ----------------------- */
@@ -196,6 +199,7 @@ namespace cola {
         explicit ColaRunManager(FilterAnsamble&& ansamble) : filterAnsamble(std::move(ansamble)) {}
         ~ColaRunManager() = default;
         void run();
+        void test();
     private:
         FilterAnsamble filterAnsamble;
     };
@@ -220,6 +224,13 @@ namespace cola {
         (*(filterAnsamble.writer))((*(filterAnsamble.converter))((*(filterAnsamble.generator))()));
     }
 
+    inline void cola::ColaRunManager::test(){
+        auto g = std::shared_ptr<VGenerator>(filterAnsamble.generator.get());
+        auto c = std::shared_ptr<VConverter>(filterAnsamble.converter.get());
+        auto w = std::shared_ptr<VWriter>(filterAnsamble.writer.get());
+        g | c | w;
+    }
 } //cola
+
 
 #endif //COLA_COLA_HH
