@@ -10,10 +10,6 @@ target_include_directories(COLAlib INTERFACE
 
 set_target_properties(COLAlib PROPERTIES PUBLIC_HEADER "include/COLA.hh")
 
-if(NOT INSTALL_DIR)
-    set(INSTALL_DIR ${PROJECT_SOURCE_DIR}/install)
-endif()
-
 install(TARGETS COLAlib
         EXPORT COLA
         PUBLIC_HEADER DESTINATION include
@@ -37,4 +33,5 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake"
         DESTINATION cmake)
 
-install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh")
+install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh
+        DESTINATION .")
