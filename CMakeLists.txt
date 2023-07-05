@@ -16,25 +16,25 @@ endif()
 
 install(TARGETS COLAlib
         EXPORT COLA
-        PUBLIC_HEADER DESTINATION ${INSTALL_DIR}/include)
+        PUBLIC_HEADER DESTINATION include
+        INCLUDES DESTINATION include) #Needed for proper EXPORT generation
 
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
         "${PROJECT_SOURCE_DIR}/data/COLAConfig.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
-        INSTALL_DESTINATION ${INSTALL_DIR}/cmake)
+        INSTALL_DESTINATION cmake)
 
 write_basic_package_version_file(
         ${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake
         COMPATIBILITY AnyNewerVersion)
 
 install(EXPORT COLA
-        DESTINATION ${INSTALL_DIR}/cmake)
+        DESTINATION cmake)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake"
-        DESTINATION ${INSTALL_DIR}/cmake)
+        DESTINATION cmake)
 
-install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh"
-        DESTINATION ${INSTALL_DIR})
+install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh")
