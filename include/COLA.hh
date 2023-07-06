@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <queue>
+#include <boost/algorithm/string.hpp>
 
 namespace cola {
 
@@ -148,7 +149,7 @@ namespace cola {
     class VFactory{
     public:
         virtual ~VFactory();
-        virtual VFilter* create() = 0;      //the pointer is passed to uniqEue_ptr constructor, therefore no leaks are possible
+        virtual VFilter* create(const std::string) = 0;      //the pointer is passed to uniqEue_ptr constructor, therefore no leaks are possible
     };
 
     inline VFactory::~VFactory() = default;
@@ -164,13 +165,20 @@ namespace cola {
         (*writer)(data);
     }
 
-    /* ----------------------- MANAGER ----------------------- */
+    /* ----------------------- METAPARSER ----------------------- */
 
 
-    struct MetaData {
+    struct SimpleMetaData {
         std::string generatorName;
         std::string converterName;
         std::string writerName;
+    };
+
+    struct MetaData {
+        std::string generatorName;
+        std::queue<std::string> converterNames;
+        std::string writerName;
+        std::map<std::string, std::string> filterParamMap;
     };
 
     struct FilterAnsamble{
@@ -185,7 +193,8 @@ namespace cola {
         ~MetaProcessor() = default;
 
         void reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type);
-        FilterAnsamble parse(const MetaData& data);
+        FilterAnsamble parse(const SimpleMetaData& data);
+        FilterAnsamble parse(const std::string data);
 
     private:
         std::map<std::string, std::shared_ptr<VFactory>> generatorMap;
@@ -195,7 +204,54 @@ namespace cola {
         void regGen(std::shared_ptr<VFactory>&& factory, const std::string& name){generatorMap.emplace(name, std::move(factory));}
         void regConv(std::shared_ptr<VFactory>&& factory, const std::string& name){converterMap.emplace(name, std::move(factory));}
         void regWrite(std::shared_ptr<VFactory>&& factory, const std::string& name){writerMap.emplace(name, std::move(factory));}
+
+        MetaData parseStrToMeta(std::string data);
     };
+
+
+    inline cola::FilterAnsamble cola::MetaProcessor::parse(const cola::SimpleMetaData& data) {
+        FilterAnsamble ansamble;
+        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create("")));
+        ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create(""))));
+        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create("")));
+        return ansamble;
+    }
+
+    inline cola::FilterAnsamble cola::MetaProcessor::parse(std::string data) {
+        FilterAnsamble ansamble;
+        MetaData meta = parseStrToMeta(data);
+        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(meta.generatorName)->create(meta.filterParamMap.at(meta.generatorName))));
+        while(!meta.converterNames.empty())
+        {ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(meta.converterNames.front())->create(meta.filterParamMap.at(meta.converterNames.front())))));
+            meta.converterNames.pop();}
+        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(meta.writerName)->create(meta.filterParamMap.at(meta.writerName))));
+        return ansamble;
+    }
+
+    inline cola::MetaData cola::MetaProcessor::parseStrToMeta(std::string data) {
+        std::vector<std::string> filters; cola::MetaData metaData;
+        boost::split(filters, data, boost::is_any_of("\n"));
+        for(int flt = 0; flt < filters.size(); ++flt){
+            std::vector<std::string> tmp;
+            boost::split(tmp, filters.at(flt), boost::is_any_of(" "));
+            std::string res = "";
+            for(int i = 1; i < tmp.size(); ++i){res+=tmp.at(1);}
+            metaData.filterParamMap.emplace(tmp.at(0),res);
+            if(flt == 0){metaData.generatorName = tmp.at(0);}
+            else if(flt == filters.size() - 1){metaData.writerName = tmp.at(0);}
+            else{metaData.converterNames.push(tmp.at(0));}
+        }
+        return metaData;
+    }
+    
+    inline void cola::MetaProcessor::reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type) {
+        if(type == "generator"){ regGen(std::move(factory), name);}
+        else if(type == "converter"){ regConv(std::move(factory), name);}
+        else if(type == "writer"){ regWrite(std::move(factory), name);}
+        else{std::cerr<<"ERROR in MetaProcessor: No such type of filter";}
+    }
+
+    /*-----------------------MANAGER-------------------------*/
 
     class ColaRunManager {
     public:
@@ -207,24 +263,9 @@ namespace cola {
         FilterAnsamble filterAnsamble;
     };
 
-
-    inline cola::FilterAnsamble cola::MetaProcessor::parse(const cola::MetaData& data) {
-        FilterAnsamble ansamble;
-        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create()));
-        ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create())));
-        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create()));
-        return ansamble;
-    }
-
-    inline void cola::MetaProcessor::reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type) {
-        if(type == "generator"){ regGen(std::move(factory), name);}
-        else if(type == "converter"){ regConv(std::move(factory), name);}
-        else if(type == "writer"){ regWrite(std::move(factory), name);}
-        else{std::cerr<<"ERROR in MetaProcessor: No such type of filter";}
-    }
-
     inline void cola::ColaRunManager::run() {
-        EventData event = (*(filterAnsamble.generator))();
+        EventData event;
+        event = (*(filterAnsamble.generator))();
         std::queue<std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
         while(!convQ.empty()){
             event = (*convQ.front())(event);
