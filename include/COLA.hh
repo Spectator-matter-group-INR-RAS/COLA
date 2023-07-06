@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <cmath>
+#include <queue>
 
 namespace cola {
 
@@ -163,7 +164,6 @@ namespace cola {
         (*writer)(data);
     }
 
-
     /* ----------------------- MANAGER ----------------------- */
 
 
@@ -174,9 +174,9 @@ namespace cola {
     };
 
     struct FilterAnsamble{
-        std::unique_ptr<VGenerator> generator;
-        std::unique_ptr<VConverter> converter;
-        std::unique_ptr<VWriter> writer;
+        std::shared_ptr<VGenerator> generator;
+        std::queue<std::shared_ptr<VConverter>> converters;
+        std::shared_ptr<VWriter> writer;
     };
 
     class MetaProcessor { //TODO: make everything initialise in constructor
@@ -210,9 +210,9 @@ namespace cola {
 
     inline cola::FilterAnsamble cola::MetaProcessor::parse(const cola::MetaData& data) {
         FilterAnsamble ansamble;
-        ansamble.generator = std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create()));
-        ansamble.converter = std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create()));
-        ansamble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create()));
+        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create()));
+        ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create())));
+        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create()));
         return ansamble;
     }
 
@@ -224,15 +224,15 @@ namespace cola {
     }
 
     inline void cola::ColaRunManager::run() {
-        (*(filterAnsamble.writer))((*(filterAnsamble.converter))((*(filterAnsamble.generator))()));
+        EventData event = (*(filterAnsamble.generator))();
+        std::queue<std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
+        while(!convQ.empty()){
+            event = (*convQ.front())(event);
+            convQ.pop();
+        }
+        (*(filterAnsamble.writer))(event);
     }
 
-    inline void cola::ColaRunManager::test(){
-        auto g = std::shared_ptr<VGenerator>(filterAnsamble.generator.get());
-        auto c = std::shared_ptr<VConverter>(filterAnsamble.converter.get());
-        auto w = std::shared_ptr<VWriter>(filterAnsamble.writer.get());
-        g | c | c | w;
-    }
 } //cola
 
 
