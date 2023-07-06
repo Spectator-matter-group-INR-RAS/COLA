@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <queue>
 
 namespace cola {
 
@@ -145,11 +146,6 @@ namespace cola {
 
     inline VWriter::~VWriter() = default;
 
-    /*
-     * This is a factory interface. Factories are classes used to create desired instances of filters. This abstraction
-     * is required to implement dependency injection. Factories are registered in the metaprocessor class
-     */
-
     class VFactory{
     public:
         virtual ~VFactory();
@@ -158,6 +154,16 @@ namespace cola {
 
     inline VFactory::~VFactory() = default;
 
+
+    inline cola::EventData operator|(std::shared_ptr<cola::VGenerator> generator, std::shared_ptr<cola::VConverter> converter){
+        return (*converter)((*generator)());
+    }
+    inline cola::EventData operator|(cola::EventData data, std::shared_ptr<cola::VConverter> converter){
+        return (*converter)(data);
+    }
+    inline void operator|(cola::EventData data, std::shared_ptr<cola::VWriter> writer){
+        (*writer)(data);
+    }
 
     /* ----------------------- MANAGER ----------------------- */
 
@@ -169,9 +175,9 @@ namespace cola {
     };
 
     struct FilterAnsamble{
-        std::unique_ptr<VGenerator> generator;
-        std::unique_ptr<VConverter> converter;
-        std::unique_ptr<VWriter> writer;
+        std::shared_ptr<VGenerator> generator;
+        std::queue<std::shared_ptr<VConverter>> converters;
+        std::shared_ptr<VWriter> writer;
     };
 
     class MetaProcessor { //TODO: make everything initialise in constructor
@@ -197,6 +203,7 @@ namespace cola {
         explicit ColaRunManager(FilterAnsamble&& ansamble) : filterAnsamble(std::move(ansamble)) {}
         ~ColaRunManager() = default;
         void run();
+        void test();
     private:
         FilterAnsamble filterAnsamble;
     };
@@ -204,9 +211,9 @@ namespace cola {
 
     inline cola::FilterAnsamble cola::MetaProcessor::parse(const cola::MetaData& data) {
         FilterAnsamble ansamble;
-        ansamble.generator = std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create()));
-        ansamble.converter = std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create()));
-        ansamble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create()));
+        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create()));
+        ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create())));
+        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create()));
         return ansamble;
     }
 
@@ -218,9 +225,16 @@ namespace cola {
     }
 
     inline void cola::ColaRunManager::run() {
-        (*(filterAnsamble.writer))((*(filterAnsamble.converter))((*(filterAnsamble.generator))()));
+        EventData event = (*(filterAnsamble.generator))();
+        std::queue<std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
+        while(!convQ.empty()){
+            event = (*convQ.front())(event);
+            convQ.pop();
+        }
+        (*(filterAnsamble.writer))(event);
     }
 
 } //cola
+
 
 #endif //COLA_COLA_HH
