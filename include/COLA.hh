@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <cmath>
+#include <iostream>
 #include <queue>
 
 namespace cola {
