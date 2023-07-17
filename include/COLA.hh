@@ -257,21 +257,23 @@ namespace cola {
     public:
         explicit ColaRunManager(FilterAnsamble&& ansamble) : filterAnsamble(std::move(ansamble)) {}
         ~ColaRunManager() = default;
-        void run();
+        void run(int n = 1);
         void test();
     private:
         FilterAnsamble filterAnsamble;
     };
 
-    inline void cola::ColaRunManager::run() {
+    inline void cola::ColaRunManager::run(int n) {
         EventData event;
-        event = (*(filterAnsamble.generator))();
-        std::queue<std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
-        while(!convQ.empty()){
-            event = (*convQ.front())(event);
-            convQ.pop();
+        for(int k = 0; k < n; k++) {
+            event = (*(filterAnsamble.generator))();
+            std::queue <std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
+            while (!convQ.empty()) {
+                event = (*convQ.front())(event);
+                convQ.pop();
+            }
+            (*(filterAnsamble.writer))(event);
         }
-        (*(filterAnsamble.writer))(event);
     }
 
 } //cola
