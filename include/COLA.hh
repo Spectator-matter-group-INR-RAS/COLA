@@ -168,13 +168,6 @@ namespace cola {
 
     /* ----------------------- METAPARSER ----------------------- */
 
-
-    struct SimpleMetaData {
-        std::string generatorName;
-        std::string converterName;
-        std::string writerName;
-    };
-
     struct MetaData {
         std::string generatorName;
         std::queue<std::string> converterNames;
@@ -194,7 +187,6 @@ namespace cola {
         ~MetaProcessor() = default;
 
         void reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type);
-        FilterAnsamble parse(const SimpleMetaData& data);
         FilterAnsamble parse(const std::string data);
 
     private:
@@ -208,15 +200,6 @@ namespace cola {
 
         MetaData parseStrToMeta(const std::string data);
     };
-
-
-    inline cola::FilterAnsamble cola::MetaProcessor::parse(const cola::SimpleMetaData& data) {
-        FilterAnsamble ansamble;
-        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(data.generatorName)->create("")));
-        ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(data.converterName)->create(""))));
-        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(data.writerName)->create("")));
-        return ansamble;
-    }
 
     inline cola::FilterAnsamble cola::MetaProcessor::parse(std::string data) {
         FilterAnsamble ansamble;
