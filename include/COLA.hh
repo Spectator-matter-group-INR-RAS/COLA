@@ -206,7 +206,7 @@ namespace cola {
         void regConv(std::shared_ptr<VFactory>&& factory, const std::string& name){converterMap.emplace(name, std::move(factory));}
         void regWrite(std::shared_ptr<VFactory>&& factory, const std::string& name){writerMap.emplace(name, std::move(factory));}
 
-        MetaData parseStrToMeta(std::string data);
+        MetaData parseStrToMeta(const std::string data);
     };
 
 
@@ -229,7 +229,7 @@ namespace cola {
         return ansamble;
     }
 
-    inline cola::MetaData cola::MetaProcessor::parseStrToMeta(std::string data) {
+    inline cola::MetaData cola::MetaProcessor::parseStrToMeta(const std::string data) {
         std::vector<std::string> filters; cola::MetaData metaData;
         boost::split(filters, data, boost::is_any_of("\n"));
         for(int flt = 0; flt < filters.size(); ++flt){
