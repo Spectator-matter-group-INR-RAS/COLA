@@ -237,9 +237,13 @@ namespace cola {
             boost::split(tmp, filters.at(flt), boost::is_any_of(" "));
             auto res = boost::trim_left_copy_if(filters.at(flt), boost::is_any_of(tmp.at(0)+" "));
             metaData.filterParamMap.emplace(tmp.at(0),res);
-            if(flt == 0){metaData.generatorName = tmp.at(0);}
-            else if(flt == filters.size() - 1){metaData.writerName = tmp.at(0);}
-            else{metaData.converterNames.push(tmp.at(0));}
+            if(flt == 0){
+                metaData.generatorName = tmp.at(0);
+            }else if(flt == filters.size() - 1){
+                metaData.writerName = tmp.at(0);
+            }else{
+                metaData.converterNames.push(tmp.at(0));
+            }
         }
         return metaData;
     }
