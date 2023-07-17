@@ -38,6 +38,8 @@ namespace cola {
         ParticleClass pClass;
     };
 
+    typedef std::vector<Particle> EventParticles;
+
     //initial nuclei nad kinematics, diagnostics information
     struct EventIniState{
         unsigned short pdgCodeA;
@@ -63,10 +65,8 @@ namespace cola {
         float phiRotB;
         float thetaRotB;
 
-        std::vector<Particle> IniStateParticles;
+        EventParticles iniStateParticles;
     };
-
-    typedef std::vector<Particle> EventParticles;
 
     struct EventData{
         EventIniState iniState;
