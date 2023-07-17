@@ -24,6 +24,20 @@ namespace cola {
         spectatorB
     };
 
+    //any particle
+    struct Particle {
+        double x;
+        double y;
+        double z;
+
+        double pX;
+        double pY;
+        double pZ;
+
+        int pdgCode;
+        ParticleClass pClass;
+    };
+
     //initial nuclei nad kinematics, diagnostics information
     struct EventIniState{
         unsigned short pdgCodeA;
@@ -48,20 +62,8 @@ namespace cola {
         float thetaRotA;
         float phiRotB;
         float thetaRotB;
-    };
 
-    //any particle
-    struct Particle {
-        double x;
-        double y;
-        double z;
-
-        double pX;
-        double pY;
-        double pZ;
-
-        int pdgCode;
-        ParticleClass pClass;
+        std::vector<Particle> IniStateParticles;
     };
 
     typedef std::vector<Particle> EventParticles;
