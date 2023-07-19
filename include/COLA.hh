@@ -216,7 +216,8 @@ namespace cola {
 
     inline cola::MetaData cola::MetaProcessor::parseStrToMeta(const std::string data) {
         std::vector<std::string> filters; cola::MetaData metaData;
-        boost::split(filters, data, boost::is_any_of("\n"));
+        std::string trimedData = boost::trim_copy_if(data, boost::is_any_of("\n"));
+        boost::split(filters, trimedData, boost::is_any_of("\n"));
         for(int flt = 0; flt < filters.size(); ++flt){
             std::vector<std::string> tmp;
             boost::split(tmp, filters.at(flt), boost::is_any_of(" "));
