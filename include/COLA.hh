@@ -116,7 +116,7 @@ namespace cola {
     public:
         ~VGenerator() override = 0;
 
-        virtual EventData operator()() = 0;
+        virtual std::unique_ptr<EventData> operator()() = 0;
     };
 
     inline VGenerator::~VGenerator() = default;
@@ -130,7 +130,7 @@ namespace cola {
     public:
         ~VConverter() override = 0;
 
-        virtual EventData operator()(EventData data) = 0;
+        virtual std::unique_ptr<EventData> operator()(std::unique_ptr<EventData>) = 0;
     };
 
     inline VConverter::~VConverter() = default;
@@ -144,7 +144,7 @@ namespace cola {
     public:
         ~VWriter() override = 0;
 
-        virtual void operator()(cola::EventData) = 0;
+        virtual void operator()(std::unique_ptr<EventData>) = 0;
     };
 
     inline VWriter::~VWriter() = default;
@@ -158,14 +158,14 @@ namespace cola {
     inline VFactory::~VFactory() = default;
 
 
-    inline cola::EventData operator|(std::shared_ptr<cola::VGenerator> generator, std::shared_ptr<cola::VConverter> converter){
+    inline std::unique_ptr<cola::EventData> operator|(std::shared_ptr<cola::VGenerator> generator, std::shared_ptr<cola::VConverter> converter){
         return (*converter)((*generator)());
     }
-    inline cola::EventData operator|(cola::EventData data, std::shared_ptr<cola::VConverter> converter){
-        return (*converter)(data);
+    inline std::unique_ptr<cola::EventData> operator|(std::unique_ptr<EventData> data, std::shared_ptr<cola::VConverter> converter){
+        return (*converter)(std::move(data));
     }
-    inline void operator|(cola::EventData data, std::shared_ptr<cola::VWriter> writer){
-        (*writer)(data);
+    inline void operator|(std::unique_ptr<EventData> data, std::shared_ptr<cola::VWriter> writer){
+        (*writer)(std::move(data));
     }
 
     /* ----------------------- METAPARSER ----------------------- */
@@ -188,17 +188,17 @@ namespace cola {
         MetaProcessor() = default;
         ~MetaProcessor() = default;
 
-        void reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type);
+        void reg(std::unique_ptr<VFactory>&&     factory, const std::string& name, const std::string& type);
         FilterAnsamble parse(const std::string data);
 
     private:
-        std::map<std::string, std::shared_ptr<VFactory>> generatorMap;
-        std::map<std::string, std::shared_ptr<VFactory>> converterMap;
-        std::map<std::string, std::shared_ptr<VFactory>> writerMap;
+        std::map<std::string, std::unique_ptr<VFactory>> generatorMap;
+        std::map<std::string, std::unique_ptr<VFactory>> converterMap;
+        std::map<std::string, std::unique_ptr<VFactory>> writerMap;
 
-        void regGen(std::shared_ptr<VFactory>&& factory, const std::string& name){generatorMap.emplace(name, std::move(factory));}
-        void regConv(std::shared_ptr<VFactory>&& factory, const std::string& name){converterMap.emplace(name, std::move(factory));}
-        void regWrite(std::shared_ptr<VFactory>&& factory, const std::string& name){writerMap.emplace(name, std::move(factory));}
+        void regGen(std::unique_ptr<VFactory>&& factory, const std::string& name){ generatorMap.emplace(name, std::move(factory)); }
+        void regConv(std::unique_ptr<VFactory>&& factory, const std::string& name){ converterMap.emplace(name, std::move(factory)); }
+        void regWrite(std::unique_ptr<VFactory>&& factory, const std::string& name){ writerMap.emplace(name, std::move(factory)); }
 
         MetaData parseStrToMeta(const std::string data);
     };
@@ -215,14 +215,15 @@ namespace cola {
     }
 
     inline cola::MetaData cola::MetaProcessor::parseStrToMeta(const std::string data) {
-        std::vector<std::string> filters; cola::MetaData metaData;
+        std::vector<std::string> filters; 
+        cola::MetaData metaData;
         std::string trimedData = boost::trim_copy_if(data, boost::is_any_of("\n"));
         boost::split(filters, trimedData, boost::is_any_of("\n"));
         for(int flt = 0; flt < filters.size(); ++flt){
             std::vector<std::string> tmp;
             boost::split(tmp, filters.at(flt), boost::is_any_of(" "));
             auto res = boost::trim_left_copy_if(filters.at(flt), boost::is_any_of(tmp.at(0)+" "));
-            metaData.filterParamMap.emplace(tmp.at(0),res);
+            metaData.filterParamMap.emplace(tmp.at(0), res);
             if (flt == 0) {
                 metaData.generatorName = tmp.at(0);
             } else if (flt == filters.size() - 1) {
@@ -234,11 +235,11 @@ namespace cola {
         return metaData;
     }
     
-    inline void cola::MetaProcessor::reg(std::shared_ptr<VFactory> factory, const std::string& name, const std::string& type) {
-        if(type == "generator"){ regGen(std::move(factory), name);}
-        else if(type == "converter"){ regConv(std::move(factory), name);}
-        else if(type == "writer"){ regWrite(std::move(factory), name);}
-        else{std::cerr<<"ERROR in MetaProcessor: No such type of filter";}
+    inline void cola::MetaProcessor::reg(std::unique_ptr<VFactory>&& factory, const std::string& name, const std::string& type) {
+        if (type == "generator") { regGen(std::move(factory), name); }
+        else if (type == "converter") { regConv(std::move(factory), name); }
+        else if (type == "writer") { regWrite(std::move(factory), name); }
+        else {std::cerr<<"ERROR in MetaProcessor: No such type of filter"; }
     }
 
     /*-----------------------MANAGER-------------------------*/
@@ -254,15 +255,14 @@ namespace cola {
     };
 
     inline void cola::ColaRunManager::run(int n) {
-        EventData event;
         for(int k = 0; k < n; k++) {
-            event = (*(filterAnsamble.generator))();
+            auto event = (*(filterAnsamble.generator))();
             std::queue <std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
             while (!convQ.empty()) {
-                event = (*convQ.front())(event);
+                event = (*convQ.front())(std::move(event));
                 convQ.pop();
             }
-            (*(filterAnsamble.writer))(event);
+            (*(filterAnsamble.writer))(std::move(event));
         }
     }
 
