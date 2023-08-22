@@ -222,10 +222,10 @@ namespace cola {
         std::string nameSeparator = "\n";
 
         std::string trimedData = boost::trim_copy_if(data, boost::is_any_of(fltSeparator.c_str()));
-        boost::split(filters, trimedData, boost::is_any_of(fltSeparator.c_str()));
+        boost::split(filters, trimedData, boost::is_any_of(fltSeparator.c_str()), boost::token_compress_on);
         for(int flt = 0; flt < filters.size(); ++flt){
             std::vector<std::string> tmp;
-            boost::split(tmp, filters.at(flt), boost::is_any_of(nameSeparator.c_str()));
+            boost::split(tmp, filters.at(flt), boost::is_any_of(nameSeparator.c_str()), boost::token_compress_on);
             auto res = filters.at(flt);
             res.erase(res.begin(),res.begin()+(tmp.at(0)+nameSeparator).size());       
             metaData.filterParamMap.emplace(tmp.at(0), res);
