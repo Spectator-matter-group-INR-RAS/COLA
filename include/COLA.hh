@@ -1,12 +1,13 @@
 #ifndef COLA_COLA_HH
 #define COLA_COLA_HH
 
-#include <map>
-#include <memory>
-#include <vector>
 #include <cmath>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <queue>
+#include <vector>
+
 #include <boost/algorithm/string.hpp>
 
 namespace cola {
