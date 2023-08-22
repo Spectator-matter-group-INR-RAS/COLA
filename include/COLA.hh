@@ -179,9 +179,9 @@ namespace cola {
     };
 
     struct FilterAnsamble{
-        std::shared_ptr<VGenerator> generator;
-        std::queue<std::shared_ptr<VConverter>> converters;
-        std::shared_ptr<VWriter> writer;
+        std::unique_ptr<VGenerator> generator;
+        std::vector<std::unique_ptr<VConverter>> converters;
+        std::unique_ptr<VWriter> writer;
     };
 
     class MetaProcessor { //TODO: make everything initialise in constructor
@@ -207,11 +207,11 @@ namespace cola {
     inline cola::FilterAnsamble cola::MetaProcessor::parse(std::string data) {
         FilterAnsamble ansamble;
         MetaData meta = parseStrToMeta(data);
-        ansamble.generator = std::shared_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(meta.generatorName)->create(meta.filterParamMap.at(meta.generatorName))));
+        ansamble.generator = std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(meta.generatorName)->create(meta.filterParamMap.at(meta.generatorName))));
         while(!meta.converterNames.empty())
-        {ansamble.converters.push(std::shared_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(meta.converterNames.front())->create(meta.filterParamMap.at(meta.converterNames.front())))));
+        {ansamble.converters.push_back(std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(meta.converterNames.front())->create(meta.filterParamMap.at(meta.converterNames.front())))));
             meta.converterNames.pop();}
-        ansamble.writer = std::shared_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(meta.writerName)->create(meta.filterParamMap.at(meta.writerName))));
+        ansamble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(meta.writerName)->create(meta.filterParamMap.at(meta.writerName))));
         return ansamble;
     }
 
@@ -258,11 +258,8 @@ namespace cola {
     inline void cola::ColaRunManager::run(int n) {
         for(int k = 0; k < n; k++) {
             auto event = (*(filterAnsamble.generator))();
-            std::queue <std::shared_ptr<VConverter>> convQ = filterAnsamble.converters;
-            while (!convQ.empty()) {
-                event = (*convQ.front())(std::move(event));
-                convQ.pop();
-            }
+            for (const auto& converter : filterAnsamble.converters)
+                event = (*converter)(std::move(event));
             (*(filterAnsamble.writer))(std::move(event));
         }
     }
