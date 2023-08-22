@@ -218,12 +218,16 @@ namespace cola {
     inline cola::MetaData cola::MetaProcessor::parseStrToMeta(const std::string data) {
         std::vector<std::string> filters; 
         cola::MetaData metaData;
-        std::string trimedData = boost::trim_copy_if(data, boost::is_any_of("\n"));
-        boost::split(filters, trimedData, boost::is_any_of("\n"));
+        std::string fltSeparator = "\t";
+        std::string nameSeparator = "\n";
+
+        std::string trimedData = boost::trim_copy_if(data, boost::is_any_of(fltSeparator.c_str()));
+        boost::split(filters, trimedData, boost::is_any_of(fltSeparator.c_str()), boost::token_compress_on);
         for(int flt = 0; flt < filters.size(); ++flt){
             std::vector<std::string> tmp;
-            boost::split(tmp, filters.at(flt), boost::is_any_of(" "));
-            auto res = boost::trim_left_copy_if(filters.at(flt), boost::is_any_of(tmp.at(0)+" "));
+            boost::split(tmp, filters.at(flt), boost::is_any_of(nameSeparator.c_str()), boost::token_compress_on);
+            auto res = filters.at(flt);
+            res.erase(res.begin(),res.begin()+(tmp.at(0)+nameSeparator).size());       
             metaData.filterParamMap.emplace(tmp.at(0), res);
             if (flt == 0) {
                 metaData.generatorName = tmp.at(0);
