@@ -35,7 +35,7 @@ namespace cola {
         double pY;
         double pZ;
 
-        unsigned int pdgCode;
+        int pdgCode;
         ParticleClass pClass;
     };
 
@@ -43,8 +43,8 @@ namespace cola {
 
     //initial nuclei nad kinematics, diagnostics information
     struct EventIniState{
-        unsigned int pdgCodeA;
-        unsigned int pdgCodeB;
+        int pdgCodeA;
+        int pdgCodeB;
 
         double pZA;
         double pZB;
@@ -78,7 +78,7 @@ namespace cola {
     typedef std::pair<unsigned short, unsigned short> AZ;
 
     //converters
-    inline AZ pdgToAZ (unsigned int pdgCode) {
+    inline AZ pdgToAZ (int pdgCode) {
         AZ data = {0, 0};
         pdgCode /=10;
         for (int i = 0; i < 3; i++) {
@@ -92,7 +92,7 @@ namespace cola {
         return data;
     }
 
-    inline unsigned int AZToPdg(AZ data) {
+    inline int AZToPdg(AZ data) {
         return 1000000000 + data.first * 10 + data.second * 10000;
     }
 
