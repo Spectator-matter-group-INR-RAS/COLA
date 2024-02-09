@@ -35,7 +35,7 @@ namespace cola {
         double pY;
         double pZ;
 
-        int pdgCode;
+        unsigned int pdgCode;
         ParticleClass pClass;
     };
 
@@ -43,8 +43,8 @@ namespace cola {
 
     //initial nuclei nad kinematics, diagnostics information
     struct EventIniState{
-        unsigned short pdgCodeA;
-        unsigned short pdgCodeB;
+        unsigned int pdgCodeA;
+        unsigned int pdgCodeB;
 
         double pZA;
         double pZB;
@@ -78,7 +78,7 @@ namespace cola {
     typedef std::pair<unsigned short, unsigned short> AZ;
 
     //converters
-    inline AZ pdgToAZ (int pdgCode) {
+    inline AZ pdgToAZ (unsigned int pdgCode) {
         AZ data = {0, 0};
         pdgCode /=10;
         for (int i = 0; i < 3; i++) {
@@ -92,7 +92,7 @@ namespace cola {
         return data;
     }
 
-    inline int AZToPdg(AZ data) {
+    inline unsigned int AZToPdg(AZ data) {
         return 1000000000 + data.first * 10 + data.second * 10000;
     }
 
@@ -178,7 +178,7 @@ namespace cola {
         std::map<std::string, std::string> filterParamMap;
     };
 
-    struct FilterAnsamble{
+    struct FilterEnsemble{
         std::unique_ptr<VGenerator> generator;
         std::vector<std::unique_ptr<VConverter>> converters;
         std::unique_ptr<VWriter> writer;
@@ -190,7 +190,7 @@ namespace cola {
         ~MetaProcessor() = default;
 
         void reg(std::unique_ptr<VFactory>&&     factory, const std::string& name, const std::string& type);
-        FilterAnsamble parse(const std::string data);
+        FilterEnsemble parse(const std::string data);
 
     private:
         std::map<std::string, std::unique_ptr<VFactory>> generatorMap;
@@ -204,22 +204,22 @@ namespace cola {
         MetaData parseStrToMeta(const std::string data);
     };
 
-    inline cola::FilterAnsamble cola::MetaProcessor::parse(std::string data) {
-        FilterAnsamble ansamble;
+    inline cola::FilterEnsemble cola::MetaProcessor::parse(std::string data) {
+        FilterEnsemble ensemble;
         MetaData meta = parseStrToMeta(data);
-        ansamble.generator = std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(meta.generatorName)->create(meta.filterParamMap.at(meta.generatorName))));
+        ensemble.generator = std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(meta.generatorName)->create(meta.filterParamMap.at(meta.generatorName))));
         while(!meta.converterNames.empty())
-        {ansamble.converters.push_back(std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(meta.converterNames.front())->create(meta.filterParamMap.at(meta.converterNames.front())))));
+        {ensemble.converters.push_back(std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(meta.converterNames.front())->create(meta.filterParamMap.at(meta.converterNames.front())))));
             meta.converterNames.pop();}
-        ansamble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(meta.writerName)->create(meta.filterParamMap.at(meta.writerName))));
-        return ansamble;
+        ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(meta.writerName)->create(meta.filterParamMap.at(meta.writerName))));
+        return ensemble;
     }
 
     inline cola::MetaData cola::MetaProcessor::parseStrToMeta(const std::string data) {
         std::vector<std::string> filters; 
         cola::MetaData metaData;
-        std::string trimedData = boost::trim_copy_if(data, boost::is_any_of("\n"));
-        boost::split(filters, trimedData, boost::is_any_of("\n"));
+        std::string trimmedData = boost::trim_copy_if(data, boost::is_any_of("\n"));
+        boost::split(filters, trimmedData, boost::is_any_of("\n"));
         for(int flt = 0; flt < filters.size(); ++flt){
             std::vector<std::string> tmp;
             boost::split(tmp, filters.at(flt), boost::is_any_of(" "));
@@ -247,20 +247,20 @@ namespace cola {
 
     class ColaRunManager {
     public:
-        explicit ColaRunManager(FilterAnsamble&& ansamble) : filterAnsamble(std::move(ansamble)) {}
+        explicit ColaRunManager(FilterEnsemble&& ensemble) : filterEnsemble(std::move(ensemble)) {}
         ~ColaRunManager() = default;
         void run(int n = 1);
         void test();
     private:
-        FilterAnsamble filterAnsamble;
+        FilterEnsemble filterEnsemble;
     };
 
     inline void cola::ColaRunManager::run(int n) {
         for(int k = 0; k < n; k++) {
-            auto event = (*(filterAnsamble.generator))();
-            for (const auto& converter : filterAnsamble.converters)
+            auto event = (*(filterEnsemble.generator))();
+            for (const auto& converter : filterEnsemble.converters)
                 event = (*converter)(std::move(event));
-            (*(filterAnsamble.writer))(std::move(event));
+            (*(filterEnsemble.writer))(std::move(event));
         }
     }
 
