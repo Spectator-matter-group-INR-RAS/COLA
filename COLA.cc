@@ -103,7 +103,7 @@ namespace cola {
             ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(name)->create(params)));
             return ensemble;
         } else {
-            throw std::runtime_error("ERROR in MetaProcessor: Couldn't open XML file " + fname + "\nError code: " +
+            throw std::runtime_error("ERROR in MetaProcessor: Couldn't open file `" + fname + "`.\nError code (tinyxml2): " +
                                              std::to_string(code));
         }
     }
