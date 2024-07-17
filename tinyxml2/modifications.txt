@@ -1,0 +1,5 @@
+Stripped off everything but source code and CMake building system files (without installation and testing).
+Added POSITION_INDEPENDENT_CODE ON to library properties to be used in .so compilation.
+Original code by Lee Thomason (www.grinninglizard.com),
+taken from https://github.com/leethomason/tinyxml2/releases/tag/10.0.0
+Changes by Savva Savenkov.
