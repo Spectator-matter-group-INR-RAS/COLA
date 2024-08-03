@@ -87,6 +87,11 @@ namespace cola {
     // Filter interface to prevent code duplication
     class VFilter{
     public:
+        VFilter() = default;
+        VFilter (const VFilter&) = delete;
+        VFilter (VFilter&&) = delete;
+        VFilter& operator=(const VFilter&) = delete;
+        VFilter& operator=(VFilter&&) = delete;
         virtual ~VFilter() = 0;
     };
 
@@ -99,6 +104,11 @@ namespace cola {
 
     class VGenerator : public VFilter{
     public:
+        VGenerator() = default;
+        VGenerator (const VGenerator&) = delete;
+        VGenerator (VGenerator&&) = delete;
+        VGenerator& operator=(const VGenerator&) = delete;
+        VGenerator& operator=(VGenerator&&) = delete;
         ~VGenerator() override = 0;
 
         virtual std::unique_ptr<EventData> operator()() = 0;
@@ -113,6 +123,11 @@ namespace cola {
 
     class VConverter : public VFilter{
     public:
+        VConverter() = default;
+        VConverter (const VConverter&) = delete;
+        VConverter (VConverter&&) = delete;
+        VConverter& operator=(const VConverter&) = delete;
+        VConverter& operator=(VConverter&&) = delete;
         ~VConverter() override = 0;
 
         virtual std::unique_ptr<EventData> operator()(std::unique_ptr<EventData>&&) = 0;
@@ -127,6 +142,11 @@ namespace cola {
 
     class VWriter : public VFilter {
     public:
+        VWriter() = default;
+        VWriter (const VWriter&) = delete;
+        VWriter (VWriter&&) = delete;
+        VWriter& operator=(const VWriter&) = delete;
+        VWriter& operator=(VWriter&&) = delete;
         ~VWriter() override = 0;
 
         virtual void operator()(std::unique_ptr<EventData>&&) = 0;
@@ -136,6 +156,11 @@ namespace cola {
 
     class VFactory{
     public:
+        VFactory() = default;
+        VFactory (const VFactory&) = delete;
+        VFactory (VFactory&&) = delete;
+        VFactory& operator=(const VFactory&) = delete;
+        VFactory& operator=(VFactory&&) = delete;
         virtual ~VFactory() = default;
         virtual VFilter* create(const std::map<std::string, std::string>&) = 0;      //the pointer is passed to unique_ptr constructor, therefore no leaks are possible
     };
