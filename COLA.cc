@@ -77,11 +77,11 @@ namespace cola {
         return params;
     }
 
-    FilterEnsemble MetaProcessor::parse(const std::string &fname) const {
+    FilterEnsemble MetaProcessor::parse(const std::string &fName) const {
         using namespace tinyxml2;
         std::cout << "Parsing XML file:" << '\n';
         XMLDocument file;
-        auto code = file.LoadFile(fname.c_str());
+        auto code = file.LoadFile(fName.c_str());
         if (code == XML_SUCCESS) {
             FilterEnsemble ensemble;
 
@@ -103,8 +103,8 @@ namespace cola {
             ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(name)->create(params)));
             return ensemble;
         } else {
-            throw std::runtime_error("ERROR in MetaProcessor: Couldn't open file `" + fname + "`.\nError code (tinyxml2): " +
-                                             std::to_string(code));
+            throw std::runtime_error("ERROR in MetaProcessor: Couldn't open file `" + fName + "`.\nError code (tinyxml2): " +
+                                     std::to_string(code));
         }
     }
 
