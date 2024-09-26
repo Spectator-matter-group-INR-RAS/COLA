@@ -28,6 +28,10 @@ namespace cola {
         return 1000000000 + data.first * 10 + data.second * 10000;
     }
 
+    AZ Particle::getAZ() const {
+        return pdgToAZ(pdgCode);
+    }
+
     // operators
 
     std::unique_ptr<EventData> operator|(const std::unique_ptr<VGenerator>& generator, const std::unique_ptr<VConverter>& converter) {
