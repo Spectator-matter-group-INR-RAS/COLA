@@ -11,7 +11,6 @@
 #include "LorentzVector.hh"
 
 namespace cola {
-    using Vector = VectorImpl<double>;
     using LorentzVector = LorentzVectorImpl<double>;
 
     /** A typedef representing mass and charge of a nucleon.
@@ -65,7 +64,7 @@ namespace cola {
     /**
      * Convenient typedef for Particle vector.
      */
-    typedef std::vector<Particle> EventParticles;
+    using EventParticles = std::vector<Particle>;
 
     /** Initial state data.
      *  This structure contains data about initial state of any given event.
@@ -307,7 +306,6 @@ namespace cola {
     private:
         FilterEnsemble filterEnsemble;
     };
-} //cola
-
+} // cola
 
 #endif //COLA_COLA_HH
