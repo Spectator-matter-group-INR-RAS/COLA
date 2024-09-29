@@ -8,7 +8,27 @@
 #include <queue>
 #include <vector>
 
+#include "LorentzVector.hh"
+
 namespace cola {
+    using LorentzVector = LorentzVectorImpl<double>;
+
+    /** A typedef representing mass and charge of a nucleon.
+     */
+    using AZ = std::pair<unsigned short, unsigned short>;
+
+    /** PDG code to AZ converter.
+     *  **WARNING:** this function is intended to process heavy ions PDG codes.
+     *  @param pdgCode PDG code of the ion.
+     *  @return AZ of the ion.
+     */
+    AZ pdgToAZ(int pdgCode);
+
+    /** AZ to PDG code convverter.
+     *  @param data AZ of the ion.
+     *  @return PDG code of the ion
+     */
+    int AZToPdg(AZ data);
 
     /** \defgroup Data Data Classes and supporting methods.
      * @{
@@ -31,13 +51,11 @@ namespace cola {
      *  A structure representing data about a single particle
      */
     struct Particle {
-        double x;       /**< *x* coordinate. */
-        double y;       /**< *y* coordinate. */
-        double z;       /**< *z* coordinate. */
+        AZ getAZ() const;
 
-        double pX;      /**< Momentum projection on *x* axis. */
-        double pY;      /**< Momentum projection on *y* axis. */
-        double pZ;      /**< Momentum projection on *z* axis. */
+        LorentzVector position; /**< Position <t, x, y, z> vector. */
+
+        LorentzVector momentum; /**< Momentum <e, x, y, z> vector. */
 
         int pdgCode;    /**< PDG code of the particle. */
         ParticleClass pClass;   /**< Data about particle origin. See ParticleClass for more info.*/
@@ -46,12 +64,12 @@ namespace cola {
     /**
      * Convenient typedef for Particle vector.
      */
-    typedef std::vector<Particle> EventParticles;
+    using EventParticles = std::vector<Particle>;
 
     /** Initial state data.
      *  This structure contains data about initial state of any given event.
      */
-    struct EventIniState{
+    struct EventIniState {
         int pdgCodeA;           /**< PDF code of the projectile. */
         int pdgCodeB;           /**< PDF code of the target. */
 
@@ -80,27 +98,10 @@ namespace cola {
 
     /** A structure combining EventIniState and EventParticles of the event.
      */
-    struct EventData{
+    struct EventData {
         EventIniState iniState;
         EventParticles particles;
     };
-
-    /** A typedef representing mass and charge of a nucleon.
-     */
-    typedef std::pair<unsigned short, unsigned short> AZ;
-
-    /** PDG code to AZ converter.
-     *  **WARNING:** this function is intended to process heavy ions PDG codes.
-     *  @param pdgCode PDG code of the ion.
-     *  @return AZ of the ion.
-     */
-    AZ pdgToAZ(int pdgCode);
-
-    /** AZ to PDG code convverter.
-     *  @param data AZ of the ion.
-     *  @return PDG code of the ion
-     */
-    int AZToPdg(AZ data);
 
     /** @}
      * \defgroup Interface Pure abstract classes used for dependency injection.
@@ -110,7 +111,7 @@ namespace cola {
     /** A common abstract parent class representing any model in the pipeline.
      *  A single model in the COLA-driven pipeline is named a Filter.
      */
-    class VFilter{
+    class VFilter {
     public:
         VFilter() = default;
         VFilter (const VFilter&) = delete;
@@ -126,7 +127,7 @@ namespace cola {
      *  This is a generator interface. Generators are the first step of the MC simulation: they take data from existing
      *  files or encapsulate nucleus-nucleus collision generators.
      */
-    class VGenerator : public VFilter{
+    class VGenerator : public VFilter {
     public:
         VGenerator() = default;
         VGenerator (const VGenerator&) = delete;
@@ -148,7 +149,7 @@ namespace cola {
     *  This is a converter interface. It is inherited by all filters that are in the middle of MC simulation.
     *  Converters are intended to transform data from previous steps.
     */
-    class VConverter : public VFilter{
+    class VConverter : public VFilter {
     public:
         VConverter() = default;
         VConverter (const VConverter&) = delete;
@@ -197,7 +198,7 @@ namespace cola {
      * This is a factory interface. It generates a Filter with its VFactory::create method. DI in COLA works via using the
      * factory classes, which are registered in a MetaProcessor instance.
      */
-    class VFactory{
+    class VFactory {
     public:
         VFactory() = default;
         VFactory (const VFactory&) = delete;
@@ -233,7 +234,7 @@ namespace cola {
 
     /** A structure representing the model pipeline.
      */
-    struct FilterEnsemble{
+    struct FilterEnsemble {
         std::unique_ptr<VGenerator> generator;                  /**< Event generator. */
         std::vector<std::unique_ptr<VConverter>> converters;    /**< Vector of converters, applied step-by-step. */
         std::unique_ptr<VWriter> writer;                        /**< Writer to save the results. */
@@ -305,8 +306,6 @@ namespace cola {
     private:
         FilterEnsemble filterEnsemble;
     };
-    /** @} */
-} //cola
-
+} // cola
 
 #endif //COLA_COLA_HH
