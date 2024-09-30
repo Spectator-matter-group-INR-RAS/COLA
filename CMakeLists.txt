@@ -9,12 +9,13 @@ add_subdirectory(tinyxml2)
 add_library(COLA SHARED COLA.cc)
 
 target_include_directories(COLA PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(COLA PRIVATE tinyxml2)
 
 set_target_properties(COLA PROPERTIES
-        PUBLIC_HEADER "COLA.hh"
+        PUBLIC_HEADER "COLA.hh;LorentzVector.hh"
         VERSION "${COLA_VERSION}"
         SOVERSION "${COLA_VERSION_MAJOR}")
 
