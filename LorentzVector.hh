@@ -83,8 +83,8 @@ namespace cola {
             if (b2 >= 1)
                 throw std::runtime_error("Boost faster than the speed of light.");
             Type ggamma = std::sqrt(1./(1.-b2));
-            t = ggamma * (t + beta * Fields_[axis]);
-            Fields_[axis] = ggamma * (Fields_[axis] + beta * t);
+            t = ggamma * (t + beta * this->*Fields_[axis]);
+            this->*Fields_[axis] = ggamma * (this->*Fields_[axis] + beta * t);
 
             return *this;
         }
