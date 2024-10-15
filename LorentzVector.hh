@@ -57,6 +57,38 @@ namespace cola {
             return *this;
         }
 
+        // borrowed from CLHEP. bx by and bz are projections of beta
+        LorentzVectorImpl& boost(Type bx, Type by, Type bz) {
+            Type b2 = bx*bx + by*by + bz*bz;
+            if (b2 >= 1)
+                throw std::runtime_error("Boost faster than speed of light.");
+            Type ggamma = 1.0 / std::sqrt(1.0 - b2);
+            Type bp = bx*x + by*y + bz*z;
+            Type gamma2 = b2 > 0 ? (ggamma - 1.0)/b2 : 0.0;
+
+            x = x + gamma2*bp*bx + ggamma*bx*t;
+            y = y + gamma2*bp*by + ggamma*by*t;
+            z = z + gamma2*bp*bz + ggamma*bz*t;
+            t = ggamma*(t + bp);
+
+            return *this;
+        }
+
+        // axis from 1 to 3 correspond to x-y-z
+        LorentzVectorImpl& boostAxis(Type beta, uint axis=3) {
+            Type b2 = beta*beta;
+            if (axis > 3 or axis < 1) {
+                throw std::runtime_error("Wrong axis in boostAxis. 1 for x, 2 for y, 3 for z.");
+            }
+            if (b2 >= 1)
+                throw std::runtime_error("Boost faster than the speed of light.");
+            Type ggamma = std::sqrt(1./(1.-b2));
+            t = ggamma * (t + beta * Fields_[axis]);
+            Fields_[axis] = ggamma * (Fields_[axis] + beta * t);
+
+            return *this;
+        }
+
         Type mag2() const { return t*t - (x*x + y*y + z*z); }
         Type mag() const { return std::sqrt(mag2()); }
 
