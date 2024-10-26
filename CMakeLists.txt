@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Add internal dependency to build
 add_subdirectory(tinyxml2)
 
-add_library(COLA SHARED COLA.cc)
+add_library(COLA SHARED COLA.cc LorentzVector.cc)
 
 target_include_directories(COLA PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

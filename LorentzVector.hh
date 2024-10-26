@@ -2,6 +2,8 @@
 #define COLA_LORENTZVECTOR_HH
 
 #include <array>
+#include <cmath>
+#include <iostream>
 
 namespace cola {
     template <typename Type = double>
@@ -56,6 +58,12 @@ namespace cola {
             }
             return *this;
         }
+
+        // bx by and bz are projections of beta
+        LorentzVectorImpl& boost(Type bx, Type by, Type bz);
+
+        // axis from 1 to 3 correspond to x-y-z. Note: this gives correct results only if other axes components are zero. TODO: Throw an error otherwise
+        LorentzVectorImpl& boostAxisRapidity(Type rapidity, uint axis=3);
 
         Type mag2() const { return t*t - (x*x + y*y + z*z); }
         Type mag() const { return std::sqrt(mag2()); }
