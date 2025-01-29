@@ -11,20 +11,34 @@ namespace cola {
     // converters
 
     AZ pdgToAZ(int pdgCode) {
-        AZ data = {0, 0};
-        pdgCode /= 10;
-        for (int i = 0; i < 3; i++) {
-            data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
-            pdgCode /= 10;
+        switch (pdgCode) {
+            case 2112:
+                return {1, 0};
+            case 2212:
+                return {1, 1};
+            default: {
+                AZ data = {0, 0};
+                pdgCode /= 10;
+                for (int i = 0; i < 3; i++) {
+                    data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+                    pdgCode /= 10;
+                }
+                for (int i = 0; i < 3; i++) {
+                    data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+                    pdgCode /= 10;
+                }
+                return data;
+            }
         }
-        for (int i = 0; i < 3; i++) {
-            data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
-            pdgCode /= 10;
-        }
-        return data;
     }
 
     int AZToPdg(AZ data) {
+        if (data.first == 1 && data.second == 0) {
+            return 2112;
+        }
+        if (data.first == 1 && data.second == 1) {
+            return 2212;
+        }
         return 1000000000 + data.first * 10 + data.second * 10000;
     }
 
