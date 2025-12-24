@@ -1,22 +1,22 @@
 /**
-* Copyright (c) 2024-2025 Alexandr Svetlichnyi, Savva Savenkov, Artemii Novikov
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*/
+ * Copyright (c) 2024-2025 Alexandr Svetlichnyi, Savva Savenkov, Artemii Novikov
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 #ifndef COLA_LORENTZVECTOR_HH
 #define COLA_LORENTZVECTOR_HH
@@ -169,19 +169,19 @@ namespace cola {
         Type y;
         Type z;
 
-    private:
+      private:
         using FieldPtr = Type LorentzVectorImpl::*;
 
-        static inline constexpr std::array<FieldPtr, 4> Fields_ = {
-            &LorentzVectorImpl::e,
-            &LorentzVectorImpl::x,
-            &LorentzVectorImpl::y,
-            &LorentzVectorImpl::z
-        };
+        static inline constexpr std::array<FieldPtr, 4> Fields_ = {&LorentzVectorImpl::e, &LorentzVectorImpl::x,
+                                                                   &LorentzVectorImpl::y, &LorentzVectorImpl::z};
 
-    public:
-        const Type& operator[](int i) const { return this->*Fields_[i]; }
-        Type& operator[](int i) { return this->*Fields_[i]; }
+      public:
+        const Type& operator[](int i) const {
+            return this->*Fields_[i];
+        }
+        Type& operator[](int i) {
+            return this->*Fields_[i];
+        }
 
         LorentzVectorImpl& operator+=(const LorentzVectorImpl& other) {
             for (size_t i = 0; i < Fields_.size(); ++i) {
@@ -277,12 +277,15 @@ namespace cola {
             return position;
         }
 
-        Type mag2() const { return t*t - (x*x + y*y + z*z); }
-        Type mag() const { return std::sqrt(mag2()); }
-
-        bool isSpaceLike() const { return mag2() > 0; }
-        bool isLightLike() const { return mag2() == 0; }
-        bool isTimeLike() const { return mag2() < 0; }
+        bool isSpaceLike() const {
+            return mag2() > 0;
+        }
+        bool isLightLike() const {
+            return mag2() == 0;
+        }
+        bool isTimeLike() const {
+            return mag2() < 0;
+        }
     };
 
     template <typename Type>
@@ -329,18 +332,15 @@ namespace cola {
         return res;
     }
 
-    template <typename Type>
-    bool operator==(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
+    template <typename Type> bool operator==(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
         return a.e == b.e && a.x == b.x && a.y == b.y && a.z == b.z;
     }
 
-    template <typename Type>
-    bool operator!=(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
+    template <typename Type> bool operator!=(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
         return !(a == b);
     }
 
-    template <typename Type>
-    std::ostream& operator<<(std::ostream& out, const LorentzVectorImpl<Type>& vec) {
+    template <typename Type> std::ostream& operator<<(std::ostream& out, const LorentzVectorImpl<Type>& vec) {
         out << "(" << vec.e << ", " << vec.x << ", " << vec.y << ", " << vec.z << ")";
         return out;
     }
