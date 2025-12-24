@@ -7,11 +7,11 @@ Architectural framework for merging nucleus-nucleus collision models.
 in source directory:
 
 ```bash
-$ cd ../
-$ mkdir build
-$ cd build
-$ cmake ../COLA
-$ cmake --build . --target install
+cd ../
+mkdir build
+cd build
+cmake ../COLA
+cmake --build . --target install
 ```
 
 You can specify `CMAKE_INSTALL_PREFIX` to change the installation location (default for most Linux systems is `/usr/local`, which requires root)
@@ -21,9 +21,10 @@ In the installation directory there is `config.sh` file, which should be sourced
 ## Documentation
 
 COLA comes with Doxygen documentation. To generate it, install doxygen and run from source directory:
+
 ```bash
-$ cd docs
-$ doxygen
+cd docs
+doxygen
 ```
 
 Generated documentation will be located in the ```docs/compiled/``` folder.
