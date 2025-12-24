@@ -102,6 +102,7 @@ CheckOptions:
   - key: readability-identifier-naming.EnumCase
     value: CamelCase
   - key: readability-identifier-naming.EnumConstantCase
+<<<<<<< HEAD
     value: UPPER_CASE
   - key: readability-identifier-naming.ConstexprVariableCase
     value: UPPER_CASE
@@ -131,10 +132,84 @@ CheckOptions:
     value: '_'
   - key: readability-identifier-naming.PrivateConstantMemberSuffix
     value: '_'
+=======
+    value: CamelCase
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConstexprFunctionCase
+    value: CamelCase
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.GlobalConstantMemberCase
+    value: CamelCase
+  - key: readability-identifier-naming.StaticConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.StaticVariableCase
+    value: camelBack
+  - key: readability-identifier-naming.MemberConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.MemberConstantStaticCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConstantMemberCase
+    value: CamelCase
+  - key: readability-identifier-naming.PrivateConstantMemberCase
+    value: CamelCase
+  - key: readability-identifier-naming.ProtectedConstantMemberCase
+    value: CamelCase
+  - key: readability-identifier-naming.GlobalVariableCase
+    value: camelBack
+  - key: readability-identifier-naming.NamespacePrefix
+    value: ''
+  - key: readability-identifier-naming.ClassPrefix
+    value: ''
+  - key: readability-identifier-naming.StructPrefix
+    value: ''
+  - key: readability-identifier-naming.FunctionPrefix
+    value: ''
+  - key: readability-identifier-naming.VariablePrefix
+    value: ''
+  - key: readability-identifier-naming.ParameterPrefix
+    value: ''
+  - key: readability-identifier-naming.MemberPrefix
+    value: ''
+  - key: readability-identifier-naming.PrivateMemberPrefix
+    value: ''
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: '_'
+  - key: readability-identifier-naming.ProtectedMemberPrefix
+    value: ''
+  - key: readability-identifier-naming.EnumPrefix
+    value: ''
+  - key: readability-identifier-naming.EnumConstantPrefix
+    value: ''
+  - key: readability-identifier-naming.ConstexprVariablePrefix
+    value: ''
+  - key: readability-identifier-naming.ConstexprFunctionPrefix
+    value: ''
+  - key: readability-identifier-naming.GlobalConstantPrefix
+    value: ''
+  - key: readability-identifier-naming.GlobalConstantMemberPrefix
+    value: ''
+  - key: readability-identifier-naming.StaticConstantPrefix
+    value: ''
+  - key: readability-identifier-naming.StaticVariablePrefix
+    value: ''
+  - key: readability-identifier-naming.MemberConstantPrefix
+    value: ''
+  - key: readability-identifier-naming.MemberConstantStaticPrefix
+    value: ''
+  - key: readability-identifier-naming.ConstantMemberPrefix
+    value: ''
+  - key: readability-identifier-naming.PrivateConstantMemberPrefix
+    value: ''
+  - key: readability-identifier-naming.ProtectedConstantMemberPrefix
+    value: ''
+>>>>>>> f669753 (add CMakePresets)
   - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
     value: false
   - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
     value: false
+<<<<<<< HEAD
   - key: readability-const-return-type.IgnoreMacros
     value: false
   - key: readability-identifier-length.MinimumVariableNameLength
@@ -155,3 +230,14 @@ CheckOptions:
     value: '^(e|ex)$'
   - key: misc-include-cleaner.MissingIncludes
     value: false
+=======
+  - key: modernize-use-trailing-return-type.AllowedFunctions
+    value: ''
+  - key: readability-const-return-type.IgnoreMacros
+    value: false
+  - key: readability-identifier-length.MinimumLength
+    value: 1
+  - key: readability-identifier-length.IgnoredVariableNames
+    value: '^i$;^j$;^k$;^x$;^y$;^z$;^n$'
+
+>>>>>>> f669753 (add CMakePresets)
