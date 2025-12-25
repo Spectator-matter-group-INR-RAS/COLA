@@ -27,6 +27,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Add internal dependency to build
 add_subdirectory(tinyxml2)
+set_target_properties(tinyxml2 PROPERTIES
+    CXX_CLANG_TIDY ""
+)
 
 add_library(COLA SHARED COLA.cc)
 
