@@ -79,8 +79,9 @@ namespace cola {
     // Metaprocessor
 
     MetaProcessor::MetaProcessor(std::map<std::string, std::pair<std::unique_ptr<VFactory>, FilterType>>& filterMap) {
-        for (auto& item : filterMap)
+        for (auto& item : filterMap) {
             reg(std::move(item.second.first), item.first, item.second.second);
+        }
     }
 
     void MetaProcessor::reg(std::unique_ptr<VFactory>&& factory, const std::string& name, const FilterType type) {
@@ -100,7 +101,7 @@ namespace cola {
     }
 
     std::map<std::string, std::string> _get_name_and_params(const tinyxml2::XMLElement* element, std::string& name) {
-        auto currentAttribute = element->FindAttribute("name");
+        const auto* currentAttribute = element->FindAttribute("name");
         name = currentAttribute->Value();
         std::cout << "filter name: " + name + "\nparams:\n";
         currentAttribute = currentAttribute->Next();
@@ -118,32 +119,32 @@ namespace cola {
         std::cout << "Parsing XML file:" << '\n';
         XMLDocument file;
         auto code = file.LoadFile(fName.c_str());
-        if (code == XML_SUCCESS) {
-            FilterEnsemble ensemble;
-
-            auto currentElement = file.RootElement()->FirstChildElement("generator");
-            std::string name;
-            std::map<std::string, std::string> params = _get_name_and_params(currentElement, name);
-            ensemble.generator =
-                std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(name)->create(params)));
-            params.clear();
-
-            currentElement = currentElement->NextSiblingElement();
-            while (currentElement->Name() != std::string("writer")) {
-                params = _get_name_and_params(currentElement, name);
-                ensemble.converters.push_back(
-                    std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(name)->create(params))));
-                params.clear();
-                currentElement = currentElement->NextSiblingElement();
-            }
-
-            params = _get_name_and_params(currentElement, name);
-            ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(name)->create(params)));
-            return ensemble;
-        } else {
+        if (code != XML_SUCCESS) {
             throw std::runtime_error("ERROR in MetaProcessor: Couldn't open file `" + fName +
                                      "`.\nError code (tinyxml2): " + std::to_string(code));
         }
+
+        FilterEnsemble ensemble;
+
+        auto* currentElement = file.RootElement()->FirstChildElement("generator");
+        std::string name;
+        std::map<std::string, std::string> params = _get_name_and_params(currentElement, name);
+        ensemble.generator =
+            std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(name)->create(params)));
+        params.clear();
+
+        currentElement = currentElement->NextSiblingElement();
+        while (currentElement->Name() != std::string("writer")) {
+            params = _get_name_and_params(currentElement, name);
+            ensemble.converters.push_back(
+                std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(name)->create(params))));
+            params.clear();
+            currentElement = currentElement->NextSiblingElement();
+        }
+
+        params = _get_name_and_params(currentElement, name);
+        ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(name)->create(params)));
+        return ensemble;
     }
 
     // Run manager
@@ -151,8 +152,9 @@ namespace cola {
     void ColaRunManager::run(int n) const {
         for (int k = 0; k < n; k++) {
             auto event = (*(filterEnsemble.generator))();
-            for (const auto& converter : filterEnsemble.converters)
+            for (const auto& converter : filterEnsemble.converters) {
                 event = std::move(event) | converter;
+            }
             std::move(event) | filterEnsemble.writer;
         }
     }

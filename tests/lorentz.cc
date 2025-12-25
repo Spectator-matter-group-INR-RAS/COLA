@@ -46,23 +46,23 @@ TEST(LorentzVector, Arithmetic) {
     LorentzVector vec2{.e = 4, .x = 3, .y = 2, .z = 1};
 
     {
-        auto expected = LorentzVector{.e = 4, 4, 4, 4};
+        auto expected = LorentzVector{.e = 4, .x = 4, .y = 4, .z = 4};
         EXPECT_EQ(vec1 + vec2, expected);
     }
 
     {
-        auto expected = LorentzVector{.e = -4, -2, 0, 2};
+        auto expected = LorentzVector{.e = -4, .x = -2, .y = 0, .z = 2};
         EXPECT_EQ(vec1 - vec2, expected);
     }
 
     {
-        auto expected = LorentzVector{.e = 0, 3, 6, 9};
+        auto expected = LorentzVector{.e = 0, .x = 3, .y = 6, .z = 9};
         EXPECT_EQ(vec1 * 3, expected);
         EXPECT_EQ(3 * vec1, expected);
     }
 
     {
-        auto expected = LorentzVector{.e = 2, 2, 2, 2};
+        auto expected = LorentzVector{.e = 2, .x = 2, .y = 2, .z = 2};
         EXPECT_EQ((vec1 + vec2) / 2, expected);
     }
 

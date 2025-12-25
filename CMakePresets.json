@@ -1,95 +1,146 @@
 {
-  "version": 6,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 13,
-    "patch": 0
-  },
-  "configurePresets": [
-    {
-      "name": "base",
-      "hidden": true,
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {
-        "BUILD_TESTING": "OFF"
-      }
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 13,
+        "patch": 0
     },
-    {
-      "name": "default",
-      "displayName": "Default",
-      "inherits": "base",
-      "errors": {
-        "dev": true,
-        "deprecated": true
-      },
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
-        "CMAKE_COLOR_DIAGNOSTICS": true
-      }
-    },
-    {
-      "name": "release",
-      "displayName": "Release",
-      "inherits": "base",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_COLOR_DIAGNOSTICS": true
-      }
-    },
-    {
-      "name": "tidy",
-      "displayName": "Clang-tidy",
-      "inherits": "default",
-      "cacheVariables": {
-        "BUILD_TESTING": "ON"
-      }
-    }
-  ],
-  "buildPresets": [
-    {
-      "name": "default",
-      "displayName": "Default Build",
-      "configurePreset": "default"
-    },
-    {
-      "name": "release",
-      "displayName": "Release Build",
-      "configurePreset": "release"
-    },
-    {
-      "name": "tidy",
-      "displayName": "Tidy Build",
-      "configurePreset": "tidy"
-    }
-  ],
-  "testPresets": [
-    {
-      "name": "default",
-      "displayName": "Run Debug Tests",
-      "configurePreset": "tidy",
-      "output": {
-        "outputOnFailure": true
-      }
-    }
-  ],
-  "workflowPresets": [
-    {
-      "name": "default",
-      "displayName": "Default Workflow",
-      "steps": [
-        { "type": "configure", "name": "default" },
-        { "type": "build", "name": "default" }
-      ]
-    },
-    {
-      "name": "test",
-      "displayName": "Test Workflow",
-      "steps": [
-        { "type": "configure", "name": "tidy" },
-        { "type": "build", "name": "tidy" },
-        { "type": "test", "name": "default" }
-      ]
-    }
-  ]
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "BUILD_TESTING": "OFF"
+            }
+        },
+        {
+            "name": "default",
+            "displayName": "Default",
+            "inherits": "base",
+            "errors": {
+                "dev": true,
+                "deprecated": true
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+                "CMAKE_COLOR_DIAGNOSTICS": true
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_COLOR_DIAGNOSTICS": true
+            }
+        },
+        {
+            "name": "tidy",
+            "displayName": "Clang-tidy",
+            "inherits": "default",
+            "cacheVariables": {
+                "BUILD_TESTING": "ON",
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--use-color;--warnings-as-errors=*"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "displayName": "Default Build",
+            "configurePreset": "default"
+        },
+        {
+            "name": "release",
+            "displayName": "Release Build",
+            "configurePreset": "release"
+        },
+        {
+            "name": "tidy",
+            "displayName": "Tidy Build",
+            "configurePreset": "tidy"
+        },
+        {
+            "name": "cmake-format",
+            "displayName": "Run cmake-format fix",
+            "configurePreset": "default",
+            "targets": ["clang-format-fix"]
+        },
+        {
+            "name": "clang-format",
+            "displayName": "Run clang-format fix",
+            "configurePreset": "default",
+            "targets": ["cmake-format-fix"]
+        },
+        {
+            "inherits": [
+                "cmake-format",
+                "clang-format"
+            ],
+            "name": "format",
+            "displayName": "Run cmake-format and clang-format"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "displayName": "Run Debug Tests",
+            "configurePreset": "tidy",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "format",
+            "displayName": "Default Workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "default"
+                },
+                {
+                    "type": "build",
+                    "name": "format"
+                }
+            ]
+        },
+        {
+            "name": "default",
+            "displayName": "Default Workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "default"
+                },
+                {
+                    "type": "build",
+                    "name": "default"
+                }
+            ]
+        },
+        {
+            "name": "test",
+            "displayName": "Test Workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "tidy"
+                },
+                {
+                    "type": "test",
+                    "name": "default"
+                }
+            ]
+        }
+    ]
 }
