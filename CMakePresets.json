@@ -45,7 +45,7 @@
             "inherits": "default",
             "cacheVariables": {
                 "BUILD_TESTING": "ON",
-                "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--use-color;--warnings-as-errors=*"
+                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy;--use-color;--warnings-as-errors=*"
             }
         }
     ],
@@ -68,22 +68,23 @@
         {
             "name": "cmake-format",
             "displayName": "Run cmake-format fix",
-            "configurePreset": "default",
+            "configurePreset": "tidy",
             "targets": ["clang-format-fix"]
         },
         {
             "name": "clang-format",
             "displayName": "Run clang-format fix",
-            "configurePreset": "default",
+            "configurePreset": "tidy",
             "targets": ["cmake-format-fix"]
         },
         {
-            "inherits": [
-                "cmake-format",
-                "clang-format"
-            ],
             "name": "format",
-            "displayName": "Run cmake-format and clang-format"
+            "displayName": "Run cmake-format and clang-format",
+            "configurePreset": "tidy",
+            "targets": [
+                "cmake-format-fix",
+                "clang-format-fix"
+            ]
         }
     ],
     "testPresets": [
@@ -103,7 +104,7 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "default"
+                    "name": "tidy"
                 },
                 {
                     "type": "build",

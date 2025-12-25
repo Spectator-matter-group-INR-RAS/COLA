@@ -1,7 +1,11 @@
 ---
 WarningsAsErrors: '*'
+<<<<<<< HEAD
 HeaderFilterRegex: '.*'
 ExcludeHeaderFilterRegex: '^(.*/)?tinyxml2/.*'
+=======
+HeaderFilterRegex: '^(?!.*tinyxml2).*$'
+>>>>>>> 73f5950 (add lint command)
 FormatStyle: 'file'
 UseColor: true
 SystemHeaders: false
