@@ -21,11 +21,8 @@
 #ifndef COLA_COLA_HH
 #define COLA_COLA_HH
 
-#include <cmath>
-#include <iostream>
 #include <map>
 #include <memory>
-#include <queue>
 #include <vector>
 
 #include "LorentzVector.hh"
@@ -42,9 +39,9 @@ namespace cola {
      *  @param pdgCode PDG code of the ion.
      *  @return AZ of the ion.
      */
-    AZ pdgToAZ(int pdgCode);
+    AZ PdgToAz(int pdgCode);
 
-    /** AZ to PDG code convverter.
+    /** AZ to PDG code converter.
      *  @param data AZ of the ion.
      *  @return PDG code of the ion
      */
@@ -58,19 +55,19 @@ namespace cola {
      *  This enum represents various outcomes of a generator event for every particle.
      */
     enum class ParticleClass : char {
-        produced, /**< A particle that was not present in the starting nuclei. */
-        elasticA, /**< A particle that was present in the projectile nucleus and has experienced only elastic
-                   * interactions.
-                   */
-        elasticB, /**< A particle that was present in the target nucleus and has experienced only elastic interactions.
-                   */
-        nonelasticA, /**< A particle that was present in the projectile nucleus and has experienced at least one
+        PRODUCED,  /**< A particle that was not present in the starting nuclei. */
+        ELASTIC_A, /**< A particle that was present in the projectile nucleus and has experienced only elastic
+                    * interactions.
+                    */
+        ELASTIC_B, /**< A particle that was present in the target nucleus and has experienced only elastic interactions.
+                    */
+        NONELASTIC_A, /**< A particle that was present in the projectile nucleus and has experienced at least one
                         non-elastic interaction. */
-        nonelasticB, /**< A particle that was present in the target nucleus and has experienced at least one non-elastic
-                        interaction. */
-        spectatorA,  /**< A particle that was present in the projectile nucleus and hasn't experienced any interactions.
+        NONELASTIC_B, /**< A particle that was present in the target nucleus and has experienced at least one
+                        non-elastic interaction. */
+        SPECTATOR_A, /**< A particle that was present in the projectile nucleus and hasn't experienced any interactions.
                       */
-        spectatorB   /**< A particle that was present in the projectile nucleus and hasn't experienced any interactions.
+        SPECTATOR_B  /**< A particle that was present in the projectile nucleus and hasn't experienced any interactions.
                       */
     };
 
@@ -78,7 +75,7 @@ namespace cola {
      *  A structure representing data about a single particle
      */
     struct Particle {
-        AZ getAZ() const;
+        AZ GetAz() const;
 
         LorentzVector position; /**< Position <t, x, y, z> vector. */
 
@@ -240,19 +237,21 @@ namespace cola {
          *  @param metaData A dictionary with key-value pairs needed for configuring a model.
          *  @return A configured class that is a VFilter child.
          */
-        virtual VFilter* create(const std::map<std::string, std::string>& metaData) = 0;
+        virtual VFilter* Create(const std::map<std::string, std::string>& metaData) = 0;
     };
 
-    std::unique_ptr<EventData> operator|(const std::unique_ptr<VGenerator>&, const std::unique_ptr<VConverter>&);
-    std::unique_ptr<EventData> operator|(std::unique_ptr<EventData>&&, const std::unique_ptr<VConverter>&);
-    void operator|(std::unique_ptr<EventData>&&, const std::unique_ptr<VWriter>&);
+    std::unique_ptr<EventData> operator|(const std::unique_ptr<VGenerator>& /*generator*/,
+                                         const std::unique_ptr<VConverter>& /*converter*/);
+    std::unique_ptr<EventData> operator|(std::unique_ptr<EventData>&& /*data*/,
+                                         const std::unique_ptr<VConverter>& /*converter*/);
+    void operator|(std::unique_ptr<EventData>&& /*data*/, const std::unique_ptr<VWriter>& /*writer*/);
 
     /** An enum for marking Filter types.
      */
     enum class FilterType : char {
-        generator,
-        converter,
-        writer
+        GENERATOR,
+        CONVERTER,
+        WRITER
     };
     /** @}
      *  \defgroup Metadata Classes for constructing and running a model.
@@ -291,7 +290,7 @@ namespace cola {
          * @param name The name of the Filter.
          * @param type The type of the Filter. See FilterType.
          */
-        void reg(std::unique_ptr<VFactory>&& factory, const std::string& name, FilterType type);
+        void Reg(std::unique_ptr<VFactory>&& factory, const std::string& name, FilterType type);
 
         /** A method to parse a XML-file to set up a configured FilterEnsemble.
          *  This method opens an XML-file @param fName to get the information to set up the model.
@@ -303,21 +302,21 @@ namespace cola {
          *  @param fName Name with the configuration XML-file.
          *  @return A configured FilterEnsemble.
          */
-        FilterEnsemble parse(const std::string& fName) const;
+        FilterEnsemble Parse(const std::string& fName) const;
 
       private:
-        std::map<std::string, std::unique_ptr<VFactory>> generatorMap;
-        std::map<std::string, std::unique_ptr<VFactory>> converterMap;
-        std::map<std::string, std::unique_ptr<VFactory>> writerMap;
+        std::map<std::string, std::unique_ptr<VFactory>> generatorMap_;
+        std::map<std::string, std::unique_ptr<VFactory>> converterMap_;
+        std::map<std::string, std::unique_ptr<VFactory>> writerMap_;
 
-        void regGen(std::unique_ptr<VFactory>&& factory, const std::string& name) {
-            generatorMap.emplace(name, std::move(factory));
+        void RegGen(std::unique_ptr<VFactory>&& factory, const std::string& name) {
+            generatorMap_.emplace(name, std::move(factory));
         }
-        void regConv(std::unique_ptr<VFactory>&& factory, const std::string& name) {
-            converterMap.emplace(name, std::move(factory));
+        void RegConv(std::unique_ptr<VFactory>&& factory, const std::string& name) {
+            converterMap_.emplace(name, std::move(factory));
         }
-        void regWrite(std::unique_ptr<VFactory>&& factory, const std::string& name) {
-            writerMap.emplace(name, std::move(factory));
+        void RegWrite(std::unique_ptr<VFactory>&& factory, const std::string& name) {
+            writerMap_.emplace(name, std::move(factory));
         }
     };
 
@@ -330,16 +329,17 @@ namespace cola {
         /** A constructor that moves the configured FilterEnsemble into the manager.
          * @param ensemble Configured model.
          */
-        explicit ColaRunManager(FilterEnsemble&& ensemble) : filterEnsemble(std::move(ensemble)) {
+        explicit ColaRunManager(FilterEnsemble&& ensemble)
+            : filterEnsemble_(std::move(ensemble)) {
         }
         ~ColaRunManager() = default;
         /** A method to run the resulting model @param n times.
          * @param n Number of runs.
          */
-        void run(int n = 1) const;
+        void Run(int n = 1) const;
 
       private:
-        FilterEnsemble filterEnsemble;
+        FilterEnsemble filterEnsemble_;
     };
 } // namespace cola
 

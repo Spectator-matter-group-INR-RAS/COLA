@@ -20,31 +20,55 @@
 
 #include "COLA.hh"
 
+#include <cmath>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <utility>
+
 #include <tinyxml2.h>
+
+namespace {
+    std::map<std::string, std::string> GetNameAndParams(const tinyxml2::XMLElement* element, std::string& name) {
+        const auto* currentAttribute = element->FindAttribute("name");
+        name = currentAttribute->Value();
+        std::cout << "filter name: " + name + "\nparams:\n";
+        currentAttribute = currentAttribute->Next();
+        std::map<std::string, std::string> params;
+        while (currentAttribute != nullptr) {
+            params.emplace(currentAttribute->Name(), currentAttribute->Value());
+            std::cout << currentAttribute->Name() << ": " << currentAttribute->Value() << '\n';
+            currentAttribute = currentAttribute->Next();
+        }
+        return params;
+    }
+} // namespace
 
 namespace cola {
 
     // converters
 
-    AZ pdgToAZ(int pdgCode) {
+    AZ PdgToAz(int pdgCode) {
         switch (pdgCode) {
-        case 2112:
-            return {1, 0};
-        case 2212:
-            return {1, 1};
-        default: {
-            AZ data = {0, 0};
-            pdgCode /= 10;
-            for (int i = 0; i < 3; i++) {
-                data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+            case 2112:
+                return {1, 0};
+            case 2212:
+                return {1, 1};
+            default: {
+                AZ data = {0, 0};
                 pdgCode /= 10;
+                for (int i = 0; i < 3; i++) {
+                    data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+                    pdgCode /= 10;
+                }
+                for (int i = 0; i < 3; i++) {
+                    data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+                    pdgCode /= 10;
+                }
+                return data;
             }
-            for (int i = 0; i < 3; i++) {
-                data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
-                pdgCode /= 10;
-            }
-            return data;
-        }
         }
     }
 
@@ -58,8 +82,8 @@ namespace cola {
         return 1000000000 + data.first * 10 + data.second * 10000;
     }
 
-    AZ Particle::getAZ() const {
-        return pdgToAZ(pdgCode);
+    AZ Particle::GetAz() const {
+        return PdgToAz(pdgCode);
     }
 
     // operators
@@ -76,45 +100,31 @@ namespace cola {
         (*writer)(std::move(data));
     }
 
-    // Metaprocessor
+    // MetaProcessor
 
     MetaProcessor::MetaProcessor(std::map<std::string, std::pair<std::unique_ptr<VFactory>, FilterType>>& filterMap) {
         for (auto& item : filterMap) {
-            reg(std::move(item.second.first), item.first, item.second.second);
+            Reg(std::move(item.second.first), item.first, item.second.second);
         }
     }
 
-    void MetaProcessor::reg(std::unique_ptr<VFactory>&& factory, const std::string& name, const FilterType type) {
+    void MetaProcessor::Reg(std::unique_ptr<VFactory>&& factory, const std::string& name, const FilterType type) {
         switch (type) {
-        case FilterType::generator:
-            regGen(std::move(factory), name);
-            break;
-        case FilterType::converter:
-            regConv(std::move(factory), name);
-            break;
-        case FilterType::writer:
-            regWrite(std::move(factory), name);
-            break;
-        default:
-            throw std::domain_error("ERROR in MetaProcessor: No such type of filter.");
+            case FilterType::GENERATOR:
+                RegGen(std::move(factory), name);
+                break;
+            case FilterType::CONVERTER:
+                RegConv(std::move(factory), name);
+                break;
+            case FilterType::WRITER:
+                RegWrite(std::move(factory), name);
+                break;
+            default:
+                throw std::domain_error("ERROR in MetaProcessor: No such type of filter.");
         }
     }
 
-    std::map<std::string, std::string> _get_name_and_params(const tinyxml2::XMLElement* element, std::string& name) {
-        const auto* currentAttribute = element->FindAttribute("name");
-        name = currentAttribute->Value();
-        std::cout << "filter name: " + name + "\nparams:\n";
-        currentAttribute = currentAttribute->Next();
-        std::map<std::string, std::string> params;
-        while (currentAttribute != nullptr) {
-            params.emplace(currentAttribute->Name(), currentAttribute->Value());
-            std::cout << currentAttribute->Name() << ": " << currentAttribute->Value() << '\n';
-            currentAttribute = currentAttribute->Next();
-        }
-        return params;
-    }
-
-    FilterEnsemble MetaProcessor::parse(const std::string& fName) const {
+    FilterEnsemble MetaProcessor::Parse(const std::string& fName) const {
         using namespace tinyxml2;
         std::cout << "Parsing XML file:" << '\n';
         XMLDocument file;
@@ -128,34 +138,34 @@ namespace cola {
 
         auto* currentElement = file.RootElement()->FirstChildElement("generator");
         std::string name;
-        std::map<std::string, std::string> params = _get_name_and_params(currentElement, name);
+        auto params = GetNameAndParams(currentElement, name);
         ensemble.generator =
-            std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(name)->create(params)));
+            std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap_.at(name)->Create(params)));
         params.clear();
 
         currentElement = currentElement->NextSiblingElement();
         while (currentElement->Name() != std::string("writer")) {
-            params = _get_name_and_params(currentElement, name);
+            params = GetNameAndParams(currentElement, name);
             ensemble.converters.push_back(
-                std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(name)->create(params))));
+                std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap_.at(name)->Create(params))));
             params.clear();
             currentElement = currentElement->NextSiblingElement();
         }
 
-        params = _get_name_and_params(currentElement, name);
-        ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(name)->create(params)));
+        params = GetNameAndParams(currentElement, name);
+        ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap_.at(name)->Create(params)));
         return ensemble;
     }
 
     // Run manager
 
-    void ColaRunManager::run(int n) const {
+    void ColaRunManager::Run(int n) const {
         for (int k = 0; k < n; k++) {
-            auto event = (*(filterEnsemble.generator))();
-            for (const auto& converter : filterEnsemble.converters) {
+            auto event = (*(filterEnsemble_.generator))();
+            for (const auto& converter : filterEnsemble_.converters) {
                 event = std::move(event) | converter;
             }
-            std::move(event) | filterEnsemble.writer;
+            std::move(event) | filterEnsemble_.writer;
         }
     }
 
