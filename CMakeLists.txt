@@ -23,9 +23,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Add internal dependency to build
 add_subdirectory(tinyxml2)
-set_target_properties(tinyxml2 PROPERTIES
-    CXX_CLANG_TIDY ""
-)
 
 add_library(COLA SHARED COLA.cc)
 
@@ -35,9 +32,14 @@ target_include_directories(
 
 target_link_libraries(COLA PRIVATE tinyxml2)
 
+option(COLA_CMAKE_CXX_CLANG_TIDY "variable will be passed to CMAKE_CXX_CLANG_TIDY of COLA target"
+       ""
+)
+
 set_target_properties(
     COLA
     PROPERTIES PUBLIC_HEADER "COLA.hh;LorentzVector.hh"
+               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
                VERSION "${COLA_VERSION}"
                SOVERSION "${COLA_VERSION_MAJOR}"
 )
@@ -70,10 +72,10 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
 
 install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh" DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-# Setup code quality tools (clang-format, cmake-format)
-include(cmake/SetupCodeQuality.cmake)
-
 enable_testing()
 if (BUILD_TESTING)
     add_subdirectory(tests)
 endif ()
+
+# Setup code quality tools (clang-format, cmake-format)
+include(cmake/SetupCodeQuality.cmake)

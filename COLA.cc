@@ -22,6 +22,22 @@
 
 #include <tinyxml2.h>
 
+namespace {
+    std::map<std::string, std::string> GetNameAndParams(const tinyxml2::XMLElement* element, std::string& name) {
+        const auto* currentAttribute = element->FindAttribute("name");
+        name = currentAttribute->Value();
+        std::cout << "filter name: " + name + "\nparams:\n";
+        currentAttribute = currentAttribute->Next();
+        std::map<std::string, std::string> params;
+        while (currentAttribute != nullptr) {
+            params.emplace(currentAttribute->Name(), currentAttribute->Value());
+            std::cout << currentAttribute->Name() << ": " << currentAttribute->Value() << '\n';
+            currentAttribute = currentAttribute->Next();
+        }
+        return params;
+    }
+} // namespace
+
 namespace cola {
 
     // converters
@@ -100,20 +116,6 @@ namespace cola {
         }
     }
 
-    std::map<std::string, std::string> _get_name_and_params(const tinyxml2::XMLElement* element, std::string& name) {
-        const auto* currentAttribute = element->FindAttribute("name");
-        name = currentAttribute->Value();
-        std::cout << "filter name: " + name + "\nparams:\n";
-        currentAttribute = currentAttribute->Next();
-        std::map<std::string, std::string> params;
-        while (currentAttribute != nullptr) {
-            params.emplace(currentAttribute->Name(), currentAttribute->Value());
-            std::cout << currentAttribute->Name() << ": " << currentAttribute->Value() << '\n';
-            currentAttribute = currentAttribute->Next();
-        }
-        return params;
-    }
-
     FilterEnsemble MetaProcessor::parse(const std::string& fName) const {
         using namespace tinyxml2;
         std::cout << "Parsing XML file:" << '\n';
@@ -128,21 +130,21 @@ namespace cola {
 
         auto* currentElement = file.RootElement()->FirstChildElement("generator");
         std::string name;
-        std::map<std::string, std::string> params = _get_name_and_params(currentElement, name);
+        auto params = GetNameAndParams(currentElement, name);
         ensemble.generator =
             std::unique_ptr<VGenerator>(dynamic_cast<VGenerator*>(generatorMap.at(name)->create(params)));
         params.clear();
 
         currentElement = currentElement->NextSiblingElement();
         while (currentElement->Name() != std::string("writer")) {
-            params = _get_name_and_params(currentElement, name);
+            params = GetNameAndParams(currentElement, name);
             ensemble.converters.push_back(
                 std::unique_ptr<VConverter>(dynamic_cast<VConverter*>(converterMap.at(name)->create(params))));
             params.clear();
             currentElement = currentElement->NextSiblingElement();
         }
 
-        params = _get_name_and_params(currentElement, name);
+        params = GetNameAndParams(currentElement, name);
         ensemble.writer = std::unique_ptr<VWriter>(dynamic_cast<VWriter*>(writerMap.at(name)->create(params)));
         return ensemble;
     }
