@@ -21,10 +21,11 @@ enable_testing()
 find_package(GTest REQUIRED)
 include(GoogleTest)
 
-set(TEST_SRCS lorentz.cpp)
+set(TEST_SRCS lorentz.cc)
 
 add_executable(COLATest ${TEST_SRCS})
 set_target_properties(COLATest PROPERTIES
+  CXX_CLANG_TIDY ""
   CXX_STANDARD 20
   CXX_STANDARD_REQUIRED YES
   CXX_EXTENSIONS NO
