@@ -29,6 +29,7 @@ set_target_properties(
     PROPERTIES CXX_STANDARD 20
                CXX_STANDARD_REQUIRED YES
                CXX_EXTENSIONS NO
+               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
 )
 
 target_link_libraries(COLATest COLA)

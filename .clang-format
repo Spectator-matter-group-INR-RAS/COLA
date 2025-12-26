@@ -5,4 +5,5 @@ ColumnLimit: 120
 PointerAlignment: Left
 BreakBeforeBraces: Attach
 NamespaceIndentation: All
+BreakTemplateDeclarations: Yes
 ...

@@ -18,9 +18,11 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include <cmath>
 #include <sstream>
 
 #include <COLA.hh>
+
 #include <gtest/gtest.h>
 
 using namespace cola;
@@ -35,9 +37,9 @@ TEST(LorentzVector, Basic) {
     EXPECT_EQ(vec[2], vec.y);
     EXPECT_EQ(vec[3], vec.z);
 
-    EXPECT_EQ(vec.mag2(), 5 * 5 - (1 * 1 + 2 * 2 + 3 * 3));
-    EXPECT_EQ(vec.mag(), std::sqrt(5 * 5 - (1 * 1 + 2 * 2 + 3 * 3)));
-    EXPECT_TRUE(vec.isSpaceLike());
+    EXPECT_EQ(vec.Mag2(), 5 * 5 - (1 * 1 + 2 * 2 + 3 * 3));
+    EXPECT_EQ(vec.Mag(), std::sqrt(5 * 5 - (1 * 1 + 2 * 2 + 3 * 3)));
+    EXPECT_TRUE(vec.IsSpaceLike());
 }
 
 TEST(LorentzVector, Arithmetic) {

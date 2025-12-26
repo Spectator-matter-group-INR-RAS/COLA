@@ -1,7 +1,10 @@
 ---
 WarningsAsErrors: '*'
-HeaderFilterRegex: '^(?!.*tinyxml2).*$'
+HeaderFilterRegex: '.*'
+ExcludeHeaderFilterRegex: '^.*/tinyxml2.*$'
 FormatStyle: 'file'
+UseColor: true
+SystemHeaders: false
 
 Checks: >
   *bugprone*,
@@ -14,6 +17,7 @@ Checks: >
   cppcoreguidelines-slicing,
   google-explicit-constructor,
   llvm-namespace-comment,
+  llvm-include-order,
   misc-definitions-in-headers,
   misc-misplaced-const,
   misc-non-copyable-objects,
@@ -21,6 +25,7 @@ Checks: >
   misc-throw-by-value-catch-by-reference,
   misc-uniqueptr-reset-release,
   misc-unused-parameters,
+  misc-include-cleaner,
   modernize-avoid-bind,
   modernize-loop-convert,
   modernize-make-shared,
@@ -44,6 +49,7 @@ Checks: >
   readability-const-return-type,
   readability-container-size-empty,
   readability-delete-null-pointer,
+  readability-duplicate-include,
   readability-else-after-return,
   readability-implicit-bool-conversion,
   readability-inconsistent-declaration-parameter-name,
@@ -51,6 +57,9 @@ Checks: >
   readability-misplaced-array-index,
   readability-non-const-parameter,
   readability-qualified-auto,
+  readability-identifier-naming,
+  readability-identifier-length,
+  readability-named-parameter,
   readability-redundant-casting,
   readability-redundant-function-ptr-dereference,
   readability-redundant-inline-specifier,
@@ -63,9 +72,6 @@ Checks: >
   readability-string-compare,
   readability-suspicious-call-argument,
   readability-uniqueptr-delete-release,
-  readability-identifier-naming,
-  readability-identifier-length,
-  readability-named-parameter,
   -bugprone-chained-comparison,
   -bugprone-easily-swappable-parameters,
   -bugprone-exception-escape,
@@ -96,7 +102,7 @@ CheckOptions:
   - key: readability-identifier-naming.EnumCase
     value: CamelCase
   - key: readability-identifier-naming.EnumConstantCase
-    value: CamelCase
+    value: UPPER_CASE
   - key: readability-identifier-naming.ConstexprVariableCase
     value: CamelCase
   - key: readability-identifier-naming.ConstexprFunctionCase
@@ -106,13 +112,13 @@ CheckOptions:
   - key: readability-identifier-naming.GlobalConstantMemberCase
     value: CamelCase
   - key: readability-identifier-naming.StaticConstantCase
-    value: CamelCase
+    value: UPPER_CASE
   - key: readability-identifier-naming.StaticVariableCase
     value: camelBack
   - key: readability-identifier-naming.MemberConstantCase
     value: CamelCase
   - key: readability-identifier-naming.MemberConstantStaticCase
-    value: CamelCase
+    value: UPPER_CASE
   - key: readability-identifier-naming.ConstantMemberCase
     value: CamelCase
   - key: readability-identifier-naming.PrivateConstantMemberCase
@@ -121,62 +127,27 @@ CheckOptions:
     value: CamelCase
   - key: readability-identifier-naming.GlobalVariableCase
     value: camelBack
-  - key: readability-identifier-naming.NamespacePrefix
-    value: ''
-  - key: readability-identifier-naming.ClassPrefix
-    value: ''
-  - key: readability-identifier-naming.StructPrefix
-    value: ''
-  - key: readability-identifier-naming.FunctionPrefix
-    value: ''
-  - key: readability-identifier-naming.VariablePrefix
-    value: ''
-  - key: readability-identifier-naming.ParameterPrefix
-    value: ''
-  - key: readability-identifier-naming.MemberPrefix
-    value: ''
-  - key: readability-identifier-naming.PrivateMemberPrefix
-    value: ''
   - key: readability-identifier-naming.PrivateMemberSuffix
     value: '_'
-  - key: readability-identifier-naming.ProtectedMemberPrefix
-    value: ''
-  - key: readability-identifier-naming.EnumPrefix
-    value: ''
-  - key: readability-identifier-naming.EnumConstantPrefix
-    value: ''
-  - key: readability-identifier-naming.ConstexprVariablePrefix
-    value: ''
-  - key: readability-identifier-naming.ConstexprFunctionPrefix
-    value: ''
-  - key: readability-identifier-naming.GlobalConstantPrefix
-    value: ''
-  - key: readability-identifier-naming.GlobalConstantMemberPrefix
-    value: ''
-  - key: readability-identifier-naming.StaticConstantPrefix
-    value: ''
-  - key: readability-identifier-naming.StaticVariablePrefix
-    value: ''
-  - key: readability-identifier-naming.MemberConstantPrefix
-    value: ''
-  - key: readability-identifier-naming.MemberConstantStaticPrefix
-    value: ''
-  - key: readability-identifier-naming.ConstantMemberPrefix
-    value: ''
-  - key: readability-identifier-naming.PrivateConstantMemberPrefix
-    value: ''
-  - key: readability-identifier-naming.ProtectedConstantMemberPrefix
-    value: ''
   - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
     value: false
   - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
     value: false
-  - key: modernize-use-trailing-return-type.AllowedFunctions
-    value: ''
   - key: readability-const-return-type.IgnoreMacros
     value: false
-  - key: readability-identifier-length.MinimumLength
-    value: 1
+  - key: readability-identifier-length.MinimumVariableNameLength
+    value: 2
   - key: readability-identifier-length.IgnoredVariableNames
-    value: '^i$;^j$;^k$;^x$;^y$;^z$;^n$'
-
+    value: '^(i|j|k|x|y|z|n|a|b)$'
+  - key: readability-identifier-length.MinimumParameterNameLength
+    value: 2
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: '^(i|j|k|x|y|z|n|a|b)$'
+  - key: readability-identifier-length.MinimumLoopCounterNameLength
+    value: 3
+  - key: readability-identifier-length.IgnoredLoopCounterNames
+    value: '^(i|j|k|n)$'
+  - key: readability-identifier-length.MinimumExceptionNameLength
+    value: 3
+  - key: readability-identifier-length.IgnoredExceptionVariableNames
+    value: '^(e|ex)$'
