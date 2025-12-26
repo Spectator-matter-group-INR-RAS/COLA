@@ -14,8 +14,8 @@ set(EXCLUDE_PATTERNS ${DEFAULT_EXCLUDE_PATTERNS} ${SETUP_QUALITY_EXCLUDE_PATTERN
 
 # Find clang-format
 find_program(
-    CLANG_FORMAT_EXE NAMES clang-format clang-format-17 clang-format-16 clang-format-15
-                           clang-format-14
+    CLANG_FORMAT_EXE NAMES clang-format-19 clang-format-18 clang-format-17 clang-format-16
+                           clang-format-15 clang-format
 )
 
 # Find cmake-format

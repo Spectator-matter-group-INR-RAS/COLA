@@ -32,16 +32,17 @@ target_include_directories(
 
 target_link_libraries(COLA PRIVATE tinyxml2)
 
-option(COLA_CMAKE_CXX_CLANG_TIDY "variable will be passed to CMAKE_CXX_CLANG_TIDY of COLA target"
-       ""
+set(COLA_CMAKE_CXX_CLANG_TIDY
+    ""
+    CACHE STRING "variable will be passed to CMAKE_CXX_CLANG_TIDY of COLA target"
 )
 
 set_target_properties(
     COLA
     PROPERTIES PUBLIC_HEADER "COLA.hh;LorentzVector.hh"
-               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
                VERSION "${COLA_VERSION}"
                SOVERSION "${COLA_VERSION_MAJOR}"
+               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
 )
 
 install(
