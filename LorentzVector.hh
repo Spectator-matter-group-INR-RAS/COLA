@@ -221,7 +221,7 @@ namespace cola {
         // bx by and bz are projections of beta
         LorentzVectorImpl& Boost(Type bx, Type by, Type bz) {
 
-            Type b2 = bx * bx + by * by + bz * bz;
+            auto b2 = bx * bx + by * by + bz * bz;
 
             if (b2 >= 1) {
                 throw std::runtime_error("Boost faster than speed of light.");
@@ -350,15 +350,18 @@ namespace cola {
         return res;
     }
 
-    template <typename Type> bool operator==(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
+    template <typename Type>
+    bool operator==(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
         return a.e == b.e && a.x == b.x && a.y == b.y && a.z == b.z;
     }
 
-    template <typename Type> bool operator!=(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
+    template <typename Type>
+    bool operator!=(const LorentzVectorImpl<Type>& a, const LorentzVectorImpl<Type>& b) {
         return !(a == b);
     }
 
-    template <typename Type> std::ostream& operator<<(std::ostream& out, const LorentzVectorImpl<Type>& vec) {
+    template <typename Type>
+    std::ostream& operator<<(std::ostream& out, const LorentzVectorImpl<Type>& vec) {
         out << "(" << vec.e << ", " << vec.x << ", " << vec.y << ", " << vec.z << ")";
         return out;
     }

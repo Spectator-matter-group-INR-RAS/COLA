@@ -40,12 +40,29 @@
             }
         },
         {
+            "name": "release-test",
+            "displayName": "Release with Tests",
+            "inherits": "release",
+            "cacheVariables": {
+                "BUILD_TESTING": "ON"
+            }
+        },
+        {
             "name": "tidy",
             "displayName": "Clang-tidy",
             "inherits": "default",
             "cacheVariables": {
                 "BUILD_TESTING": "ON",
-                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy;--use-color;--warnings-as-errors=*"
+                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy"
+            }
+        },
+        {
+            "name": "tidy-fix",
+            "displayName": "Clang-tidy fix",
+            "inherits": "default",
+            "cacheVariables": {
+                "BUILD_TESTING": "ON",
+                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy;--fix"
             }
         }
     ],
@@ -61,29 +78,60 @@
             "configurePreset": "release"
         },
         {
+            "name": "release-test",
+            "displayName": "Release Test Build",
+            "configurePreset": "release-test"
+        },
+        {
             "name": "tidy",
             "displayName": "Tidy Build",
             "configurePreset": "tidy"
         },
         {
-            "name": "cmake-format",
-            "displayName": "Run cmake-format fix",
+            "name": "tidy-fix",
+            "displayName": "Tidy fix Build",
+            "configurePreset": "tidy-fix"
+        },
+        {
+            "name": "clang-format-check",
+            "displayName": "Check clang-format",
+            "configurePreset": "tidy",
+            "targets": ["clang-format-check"]
+        },
+        {
+            "name": "clang-format-fix",
+            "displayName": "Fix clang-format",
             "configurePreset": "tidy",
             "targets": ["clang-format-fix"]
         },
         {
-            "name": "clang-format",
-            "displayName": "Run clang-format fix",
+            "name": "cmake-format-check",
+            "displayName": "Check cmake-format",
+            "configurePreset": "tidy",
+            "targets": ["cmake-format-check"]
+        },
+        {
+            "name": "cmake-format-fix",
+            "displayName": "Fix cmake-format",
             "configurePreset": "tidy",
             "targets": ["cmake-format-fix"]
         },
         {
-            "name": "format",
-            "displayName": "Run cmake-format and clang-format",
+            "name": "check-format",
+            "displayName": "Check all linters",
             "configurePreset": "tidy",
             "targets": [
-                "cmake-format-fix",
-                "clang-format-fix"
+                "clang-format-check",
+                "cmake-format-check"
+            ]
+        },
+        {
+            "name": "fix-format",
+            "displayName": "Fix all linters",
+            "configurePreset": "tidy",
+            "targets": [
+                "clang-format-fix",
+                "cmake-format-fix"
             ]
         }
     ],
@@ -95,23 +143,17 @@
             "output": {
                 "outputOnFailure": true
             }
+        },
+        {
+            "name": "release",
+            "displayName": "Run Release Tests",
+            "configurePreset": "release-test",
+            "output": {
+                "outputOnFailure": true
+            }
         }
     ],
     "workflowPresets": [
-        {
-            "name": "format",
-            "displayName": "Default Workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "tidy"
-                },
-                {
-                    "type": "build",
-                    "name": "format"
-                }
-            ]
-        },
         {
             "name": "default",
             "displayName": "Default Workflow",
@@ -128,11 +170,15 @@
         },
         {
             "name": "test",
-            "displayName": "Test Workflow",
+            "displayName": "Test Workflow (with linter checks)",
             "steps": [
                 {
                     "type": "configure",
                     "name": "tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "check-format"
                 },
                 {
                     "type": "build",
@@ -141,6 +187,52 @@
                 {
                     "type": "test",
                     "name": "default"
+                }
+            ]
+        },
+        {
+            "name": "check-format",
+            "displayName": "Check All Linters Workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "check-format"
+                }
+            ]
+        },
+        {
+            "name": "fix-format",
+            "displayName": "Fix All Linters Workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "fix-format"
+                }
+            ]
+        },
+        {
+            "name": "release-test",
+            "displayName": "Release Test Workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "release-test"
+                },
+                {
+                    "type": "build",
+                    "name": "release-test"
+                },
+                {
+                    "type": "test",
+                    "name": "release"
                 }
             ]
         }

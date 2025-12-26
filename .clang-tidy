@@ -1,11 +1,7 @@
 ---
 WarningsAsErrors: '*'
-<<<<<<< HEAD
 HeaderFilterRegex: '.*'
-ExcludeHeaderFilterRegex: '^(.*/)?tinyxml2/.*'
-=======
-HeaderFilterRegex: '^(?!.*tinyxml2).*$'
->>>>>>> 73f5950 (add lint command)
+ExcludeHeaderFilterRegex: '^.*/tinyxml2.*$'
 FormatStyle: 'file'
 UseColor: true
 SystemHeaders: false
@@ -21,6 +17,7 @@ Checks: >
   cppcoreguidelines-slicing,
   google-explicit-constructor,
   llvm-namespace-comment,
+  llvm-include-order,
   misc-definitions-in-headers,
   misc-misplaced-const,
   misc-non-copyable-objects,
