@@ -46,7 +46,6 @@ set(COLA_CMAKE_CXX_CLANG_TIDY
 set_target_properties(
     COLA
     PROPERTIES PUBLIC_HEADER "COLA.hh;LorentzVector.hh"
-               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
                VERSION "${COLA_VERSION}"
                SOVERSION "${COLA_VERSION_MAJOR}"
                CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
