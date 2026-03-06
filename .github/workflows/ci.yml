@@ -56,11 +56,15 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4bae080 (improve styles)
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 21
           sudo apt-get update
           sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-21
+<<<<<<< HEAD
           pip install cmake-format
 =======
           sudo apt-get update
@@ -70,6 +74,8 @@ jobs:
 >>>>>>> f669753 (add CMakePresets)
 =======
           sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-19
+=======
+>>>>>>> 4bae080 (improve styles)
           pip install cmake-format
 >>>>>>> 3e6189c (update ci)
 

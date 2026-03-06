@@ -52,23 +52,23 @@ namespace cola {
 
     AZ PdgToAz(int pdgCode) {
         switch (pdgCode) {
-        case 2112:
-            return {1, 0};
-        case 2212:
-            return {1, 1};
-        default: {
-            AZ data = {0, 0};
-            pdgCode /= 10;
-            for (int i = 0; i < 3; i++) {
-                data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+            case 2112:
+                return {1, 0};
+            case 2212:
+                return {1, 1};
+            default: {
+                AZ data = {0, 0};
                 pdgCode /= 10;
+                for (int i = 0; i < 3; i++) {
+                    data.first += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+                    pdgCode /= 10;
+                }
+                for (int i = 0; i < 3; i++) {
+                    data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
+                    pdgCode /= 10;
+                }
+                return data;
             }
-            for (int i = 0; i < 3; i++) {
-                data.second += pdgCode % 10 * static_cast<unsigned short>(pow(10, i));
-                pdgCode /= 10;
-            }
-            return data;
-        }
         }
     }
 

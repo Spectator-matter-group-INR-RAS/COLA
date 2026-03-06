@@ -8,4 +8,8 @@ AlignAfterOpenBracket: true
 NamespaceIndentation: All
 BreakTemplateDeclarations: Yes
 IndentCaseLabels: Yes
+<<<<<<< HEAD
+=======
+OneLineFormatOffRegex: '^// NOLINT'
+>>>>>>> 4bae080 (improve styles)
 ...
