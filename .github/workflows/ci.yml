@@ -29,8 +29,11 @@ jobs:
       - name: Install dependencies (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 21
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-19
+          sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-21
           pip install cmake-format
 
       - name: Install dependencies (macOS)

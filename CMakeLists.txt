@@ -17,14 +17,18 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.13)
-project(COLA VERSION 0.3.2)
-
-set(CMAKE_CXX_STANDARD 17)
+project(
+    COLA
+    VERSION 0.3.2
+    LANGUAGES CXX
+)
 
 # Add internal dependency to build
 add_subdirectory(tinyxml2)
 
 add_library(COLA SHARED COLA.cc)
+
+target_compile_features(COLA PUBLIC cxx_std_17)
 
 target_include_directories(
     COLA PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>
@@ -45,33 +49,43 @@ set_target_properties(
                CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
 )
 
+include(GNUInstallDirs)
+
 install(
     TARGETS COLA
     EXPORT COLAExport
-    LIBRARY DESTINATION lib
-    PUBLIC_HEADER DESTINATION include
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     INCLUDES
-    DESTINATION include
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
     "${PROJECT_SOURCE_DIR}/data/COLAConfig.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
-    INSTALL_DESTINATION lib/cmake/COLA
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA
 )
 
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake COMPATIBILITY AnyNewerVersion
 )
 
-install(EXPORT COLAExport DESTINATION lib/cmake/COLA)
+install(EXPORT COLAExport DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake" DESTINATION lib/cmake/COLA
+              "${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA
 )
 
 install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh" DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+install(
+    DIRECTORY cmake/
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/COLA/cmake
+    FILES_MATCHING
+    PATTERN "*.cmake"
+)
 
 enable_testing()
 if (BUILD_TESTING)

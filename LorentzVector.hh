@@ -46,41 +46,41 @@ namespace cola {
       private:
         using FieldPtr = Type LorentzVectorImpl::*;
 
-        static constexpr std::array<FieldPtr, 4> Fields = {&LorentzVectorImpl::e, &LorentzVectorImpl::x,
+        static constexpr std::array<FieldPtr, 4> FIELDS = {&LorentzVectorImpl::e, &LorentzVectorImpl::x,
                                                            &LorentzVectorImpl::y, &LorentzVectorImpl::z};
 
       public:
         const Type& operator[](int i) const {
-            return this->*Fields[i];
+            return this->*FIELDS[i];
         }
         Type& operator[](int i) {
-            return this->*Fields[i];
+            return this->*FIELDS[i];
         }
 
         LorentzVectorImpl& operator+=(const LorentzVectorImpl& other) {
-            for (size_t i = 0; i < Fields.size(); ++i) {
-                this->*Fields[i] += other.*Fields[i];
+            for (size_t i = 0; i < FIELDS.size(); ++i) {
+                this->*FIELDS[i] += other.*FIELDS[i];
             }
             return *this;
         }
 
         LorentzVectorImpl& operator-=(const LorentzVectorImpl& other) {
-            for (size_t i = 0; i < Fields.size(); ++i) {
-                this->*Fields[i] -= other.*Fields[i];
+            for (size_t i = 0; i < FIELDS.size(); ++i) {
+                this->*FIELDS[i] -= other.*FIELDS[i];
             }
             return *this;
         }
 
         LorentzVectorImpl& operator*=(Type scalar) {
-            for (size_t i = 0; i < Fields.size(); ++i) {
-                this->*Fields[i] *= scalar;
+            for (size_t i = 0; i < FIELDS.size(); ++i) {
+                this->*FIELDS[i] *= scalar;
             }
             return *this;
         }
 
         LorentzVectorImpl& operator/=(Type scalar) {
-            for (size_t i = 0; i < Fields.size(); ++i) {
-                this->*Fields[i] /= scalar;
+            for (size_t i = 0; i < FIELDS.size(); ++i) {
+                this->*FIELDS[i] /= scalar;
             }
             return *this;
         }
@@ -135,10 +135,10 @@ namespace cola {
                 throw std::runtime_error(
                     "Rapidity calculation only viable for space-like 4-vectors. Use boost() instead");
             }
-            Type inv = std::sqrt(e * e - this->*Fields[axis] * this->*Fields[axis]);
-            Type rRapidity = rapidity + .5 * (std::log(e + this->*Fields[axis]) - std::log(e - this->*Fields[axis]));
+            Type inv = std::sqrt(e * e - this->*FIELDS[axis] * this->*FIELDS[axis]);
+            Type rRapidity = rapidity + .5 * (std::log(e + this->*FIELDS[axis]) - std::log(e - this->*FIELDS[axis]));
             e = inv * std::cosh(rRapidity);
-            this->*Fields[axis] = inv * std::sinh(rRapidity);
+            this->*FIELDS[axis] = inv * std::sinh(rRapidity);
 
             return *this;
         }

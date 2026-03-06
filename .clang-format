@@ -4,6 +4,9 @@ BasedOnStyle: Microsoft
 ColumnLimit: 120
 PointerAlignment: Left
 BreakBeforeBraces: Attach
+AlignAfterOpenBracket: true
 NamespaceIndentation: All
 BreakTemplateDeclarations: Yes
+IndentCaseLabels: Yes
+OneLineFormatOffRegex: '^// NOLINT'
 ...

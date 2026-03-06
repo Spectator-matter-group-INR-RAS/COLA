@@ -13,10 +13,7 @@ set(DEFAULT_EXCLUDE_PATTERNS ".*/build/.*" ".*/tinyxml2/.*")
 set(EXCLUDE_PATTERNS ${DEFAULT_EXCLUDE_PATTERNS} ${SETUP_QUALITY_EXCLUDE_PATTERNS})
 
 # Find clang-format
-find_program(
-    CLANG_FORMAT_EXE NAMES clang-format-19 clang-format-18 clang-format-17 clang-format-16
-                           clang-format-15 clang-format
-)
+find_program(CLANG_FORMAT_EXE NAMES clang-format-21 clang-format)
 
 # Find cmake-format
 find_program(CMAKE_FORMAT_EXE NAMES cmake-format)
