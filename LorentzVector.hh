@@ -45,54 +45,54 @@ namespace cola {
         const Type& operator[](int i) const { return this->*Fields_[i]; }
         Type& operator[](int i) { return this->*Fields_[i]; }
 
-        Vector3& operator+=(const Vector3& other) {
+        std::enable_if_t<std::is_arithmetic_v<Type>, Vector3&> operator+=(const Vector3& other) {
             for (size_t i = 0; i < Fields_.size(); ++i) {
                 this->*Fields_[i] += other.*Fields_[i];
             }
             return *this;
         }
 
-        Vector3& operator-=(const Vector3& other) {
+        std::enable_if_t<std::is_arithmetic_v<Type>, Vector3&> operator-=(const Vector3& other) {
             for (size_t i = 0; i < Fields_.size(); ++i) {
                 this->*Fields_[i] -= other.*Fields_[i];
             }
             return *this;
         }
 
-        Vector3& operator*=(Type scalar) {
+        std::enable_if_t<std::is_arithmetic_v<Type>, Vector3&> operator*=(Type scalar) {
             for (size_t i = 0; i < Fields_.size(); ++i) {
                 this->*Fields_[i] *= scalar;
             }
             return *this;
         }
 
-        Vector3& operator/=(Type scalar) {
+        std::enable_if_t<std::is_arithmetic_v<Type>, Vector3&> operator/=(Type scalar) {
             for (size_t i = 0; i < Fields_.size(); ++i) {
                 this->*Fields_[i] /= scalar;
             }
             return *this;
         }
 
-        Type mag2() const { return x*x + y*y + z*z; }
-        Type mag() const { return std::sqrt(mag2()); }
+        std::enable_if_t<std::is_arithmetic_v<Type>, Type> mag2() const { return x*x + y*y + z*z; }
+        std::enable_if_t<std::is_arithmetic_v<Type>, Type> mag() const { return std::sqrt(mag2()); }
     };
 
-     template <typename Type>
-    Vector3<Type> operator+(const Vector3<Type>& a, const Vector3<Type>& b) {
+    template <typename Type>
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> operator+(const Vector3<Type>& a, const Vector3<Type>& b) {
         auto res = a;
         res += b;
         return res;
     }
 
     template <typename Type>
-    Vector3<Type> operator-(const Vector3<Type>& a, const Vector3<Type>& b) {
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> operator-(const Vector3<Type>& a, const Vector3<Type>& b) {
         auto res = a;
         res -= b;
         return res;
     }
 
     template <typename Type>
-    Vector3<Type> operator-(const Vector3<Type>& a)
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> operator-(const Vector3<Type>& a)
     {
         auto res = a;
         res.x = -res.x;
@@ -102,19 +102,19 @@ namespace cola {
     }
 
     template <typename Type, typename Scalar>
-    Vector3<Type> operator*(const Vector3<Type>& vec, Scalar scalar) {
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> operator*(const Vector3<Type>& vec, Scalar scalar) {
         auto res = vec;
         res *= scalar;
         return res;
     }
 
     template <typename Type, typename Scalar>
-    Vector3<Type> operator*(Scalar scalar, const Vector3<Type>& vec) {
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> operator*(Scalar scalar, const Vector3<Type>& vec) {
         return vec * scalar;
     }
 
     template <typename Type, typename Scalar>
-    Vector3<Type> operator/(const Vector3<Type>& vec, Scalar scalar) {
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> operator/(const Vector3<Type>& vec, Scalar scalar) {
         auto res = vec;
         res /= scalar;
         return res;
@@ -136,8 +136,9 @@ namespace cola {
         return out;
     }
 
+    // assuming decart coordinate systems, get Vector coordinates in a new system, where uzVec is Oz unit vector coordinates in the old system.
     template <typename Type>
-    Vector3<Type> rotateUz(const Vector3<Type> stVec, const Vector3<Type> uzVec) {
+    std::enable_if_t<std::is_arithmetic_v<Type>, Vector3<Type>> rotateUz(const Vector3<Type> stVec, const Vector3<Type> uzVec) {
         // NewUzVector must be normalized !
 
         Vector3<Type> resVec;
