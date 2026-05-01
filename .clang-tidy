@@ -2,7 +2,7 @@
 ---
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
-ExcludeHeaderFilterRegex: '^.*/tinyxml2.*$'
+ExcludeHeaderFilterRegex: '^(.*/)?tinyxml2/.*'
 FormatStyle: 'file'
 UseColor: true
 SystemHeaders: false
