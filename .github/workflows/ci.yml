@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-<<<<<<< HEAD
-<<<<<<< HEAD
     branches: [ main, master ]
   pull_request:
     types: [opened, synchronize, reopened]
@@ -23,30 +21,6 @@ jobs:
             compiler: g++
           - os: macos-latest
             compiler: clang
-=======
-    branches: [ main, master, develop ]
-=======
-    branches: [ main, master ]
->>>>>>> 3e6189c (update ci)
-  pull_request:
-    branches: [ main, master ]
-
-jobs:
-  ci:
-    name: CI (${{ matrix.os }} - ${{ matrix.compiler }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            compiler: g++
-          - os: macos-latest
-<<<<<<< HEAD
-            compiler: gcc
->>>>>>> f669753 (add CMakePresets)
-=======
-            compiler: clang
->>>>>>> 3e6189c (update ci)
 
     steps:
       - name: Checkout code
@@ -55,35 +29,16 @@ jobs:
       - name: Install dependencies (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4bae080 (improve styles)
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 21
           sudo apt-get update
           sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-21
-<<<<<<< HEAD
           pip install cmake-format
-=======
-          sudo apt-get update
-<<<<<<< HEAD
-          sudo apt-get install -y build-essential cmake ninja-build
-          sudo apt-get install -y libgtest-dev
->>>>>>> f669753 (add CMakePresets)
-=======
-          sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-19
-=======
->>>>>>> 4bae080 (improve styles)
-          pip install cmake-format
->>>>>>> 3e6189c (update ci)
 
       - name: Install dependencies (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-<<<<<<< HEAD
-<<<<<<< HEAD
           brew install cmake googletest
 
       - name: Build and Test
@@ -102,84 +57,3 @@ jobs:
         if: always() && matrix.os == 'ubuntu-latest'
         run: |
           cmake --workflow check-format
-=======
-          brew install cmake ninja googletest
-=======
-          brew install cmake googletest
->>>>>>> 3e6189c (update ci)
-
-      - name: Build and Test
-        id: build-test
-        run: |
-          cmake --workflow release-test
-
-      - name: Clang-tidy
-        id: clang-tidy
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          cmake --workflow test
-
-      - name: Check formatting
-        id: check-format
-        if: always() && matrix.os == 'ubuntu-latest'
-        run: |
-<<<<<<< HEAD
-          find . -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.hh" -o -name "*.hpp" -o -name "*.hxx" -o -name "*.h" | \
-          grep -v "./build" | \
-          grep -v "./tinyxml2" | \
-          xargs clang-format-17 --dry-run --Werror
-
-  cmake-format:
-    name: Check CMake Formatting
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install cmake-format
-        run: |
-          pip3 install cmake-format
-
-      - name: Check CMake formatting
-        run: |
-          find . -name "CMakeLists.txt" -o -name "*.cmake" | \
-          grep -v "./build" | \
-          grep -v "./tinyxml2" | \
-          xargs cmake-format --check
-
-  clang-tidy:
-    name: Static Analysis
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build clang-tidy-17 clang-17 libgtest-dev
-
-      - name: Configure CMake
-        env:
-          CC: clang-17
-          CXX: clang++-17
-        run: |
-          cmake -B build -S . -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-      - name: Build (generate compile_commands.json)
-        run: |
-          cmake --build build --config Release
-
-      - name: Run clang-tidy
-        run: |
-          find . -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.hh" -o -name "*.hpp" -o -name "*.hxx" -o -name "*.h" | \
-          grep -v "./build" | \
-          grep -v "./tinyxml2" | \
-          xargs clang-tidy-17 -p build
-
->>>>>>> f669753 (add CMakePresets)
-=======
-          cmake --workflow check-format
->>>>>>> 3e6189c (update ci)

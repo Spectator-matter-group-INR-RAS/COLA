@@ -8,77 +8,40 @@ UseColor: true
 SystemHeaders: false
 
 Checks: >
-  *bugprone*,
-  *performance*,
-  clang-analyzer-optin.cplusplus.VirtualCall,
-  clang-analyzer-optin.performance.Padding,
-  cppcoreguidelines-init-variables,
-  cppcoreguidelines-prefer-member-initializer,
-  cppcoreguidelines-pro-type-static-cast-downcast,
-  cppcoreguidelines-slicing,
-  google-explicit-constructor,
-  llvm-namespace-comment,
-  misc-definitions-in-headers,
-  misc-misplaced-const,
-  misc-non-copyable-objects,
-  misc-static-assert,
-  misc-throw-by-value-catch-by-reference,
-  misc-uniqueptr-reset-release,
-  misc-unused-parameters,
-  misc-include-cleaner,
-  modernize-avoid-bind,
-  modernize-loop-convert,
-  modernize-make-shared,
-  modernize-redundant-void-arg,
-  modernize-replace-auto-ptr,
-  modernize-replace-disallow-copy-and-assign-macro,
-  modernize-replace-random-shuffle,
-  modernize-shrink-to-fit,
-  modernize-use-auto,
-  modernize-use-bool-literals,
-  modernize-use-default-member-init,
-  modernize-use-emplace,
-  modernize-use-equals-default,
-  modernize-use-equals-delete,
-  modernize-use-noexcept,
-  modernize-use-nullptr,
-  modernize-use-override,
-  modernize-use-using,
-  readability-avoid-const-params-in-decls,
-  readability-braces-around-statements,
-  readability-const-return-type,
-  readability-container-size-empty,
-  readability-delete-null-pointer,
-  readability-duplicate-include,
-  readability-else-after-return,
-  readability-implicit-bool-conversion,
-  readability-inconsistent-declaration-parameter-name,
-  readability-make-member-function-const,
-  readability-misplaced-array-index,
-  readability-non-const-parameter,
-  readability-qualified-auto,
-  readability-identifier-naming,
-  readability-identifier-length,
-  readability-named-parameter,
-  readability-redundant-casting,
-  readability-redundant-function-ptr-dereference,
-  readability-redundant-inline-specifier,
-  readability-redundant-member-init,
-  readability-redundant-smartptr-get,
-  readability-redundant-string-cstr,
-  readability-simplify-subscript-expr,
-  readability-static-accessed-through-instance,
-  readability-string-compare,
-  readability-suspicious-call-argument,
-  readability-uniqueptr-delete-release,
-  -bugprone-chained-comparison,
-  -bugprone-easily-swappable-parameters,
+  abseil-*,
+  bugprone-*,
+  google-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
   -bugprone-exception-escape,
-  -bugprone-reserved-identifier,
-  -bugprone-unused-raii,
-  -performance-enum-size,
+  -google-runtime-references,
+  -google-build-using-namespace,
+  -google-readability-todo,
+  -misc-non-private-member-variables-in-classes,
+  -misc-const-correctness,
+  -modernize-return-braced-init-list,
+  -modernize-use-trailing-return-type,
+  -modernize-concat-nested-namespaces,
+  -modernize-use-nodiscard,
+  -modernize-unary-static-assert,
+  -modernize-use-constraints,
+  -performance-move-const-arg,
   -performance-avoid-endl,
-  -performance-inefficient-string-concatenation,
+  -performance-enum-size,
+  -readability-magic-numbers,
+  -readability-redundant-declaration,
+  -readability-function-cognitive-complexity,
+  -readability-math-missing-parentheses,
+  -readability-uppercase-literal-suffix,
+  -bugprone-narrowing-conversions,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-inc-dec-in-conditions,
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-unchecked-optional-access,
+  -bugprone-unused-local-non-trivial-variable,
 
 CheckOptions:
   - key: readability-identifier-naming.NamespaceCase
@@ -90,47 +53,19 @@ CheckOptions:
   - key: readability-identifier-naming.FunctionCase
     value: CamelCase
   - key: readability-identifier-naming.VariableCase
-    value: camelBack
-  - key: readability-identifier-naming.ParameterCase
-    value: camelBack
-  - key: readability-identifier-naming.MemberCase
-    value: camelBack
-  - key: readability-identifier-naming.PrivateMemberCase
-    value: camelBack
-  - key: readability-identifier-naming.ProtectedMemberCase
-    value: camelBack
-  - key: readability-identifier-naming.EnumCase
-    value: CamelCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassMemberSuffix
+    value: _
   - key: readability-identifier-naming.EnumConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.ConstexprVariableCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.ConstexprFunctionCase
     value: CamelCase
-  - key: readability-identifier-naming.GlobalConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.GlobalConstantMemberCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.StaticConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.StaticVariableCase
-    value: camelBack
-  - key: readability-identifier-naming.MemberConstantCase
-    value: camelBack
-  - key: readability-identifier-naming.MemberConstantStaticCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.ConstantMemberCase
-    value: camelBack
-  - key: readability-identifier-naming.PrivateConstantMemberCase
-    value: camelBack
-  - key: readability-identifier-naming.ProtectedConstantMemberCase
-    value: camelBack
-  - key: readability-identifier-naming.GlobalVariableCase
-    value: camelBack
-  - key: readability-identifier-naming.PrivateMemberSuffix
-    value: '_'
-  - key: readability-identifier-naming.PrivateConstantMemberSuffix
-    value: '_'
+  - key: readability-identifier-naming.EnumConstantPrefix
+    value: k
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConstexprVariablePrefix
+    value: k
   - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
     value: false
   - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
