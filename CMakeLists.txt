@@ -19,17 +19,11 @@
 cmake_minimum_required(VERSION 3.13)
 project(
     COLA
-<<<<<<< HEAD
     VERSION 0.3.3
     LANGUAGES CXX
 )
 
 set(CMAKE_CXX_STANDARD 17)
-=======
-    VERSION 0.3.2
-    LANGUAGES CXX
-)
->>>>>>> 4bae080 (improve styles)
 
 # Add internal dependency to build
 add_subdirectory(tinyxml2)
@@ -58,10 +52,7 @@ set_target_properties(
 )
 
 include(GNUInstallDirs)
-<<<<<<< HEAD
 include(CMakePackageConfigHelpers)
-=======
->>>>>>> 4bae080 (improve styles)
 
 install(
     TARGETS COLA
