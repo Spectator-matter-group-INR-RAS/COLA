@@ -1,0 +1,25 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+IndentWidth: 2
+ColumnLimit: 120
+UseTab: Never
+BreakBeforeBraces: Attach
+PointerAlignment: Left
+SpaceBeforeParens: ControlStatements
+AlignAfterOpenBracket: true
+NamespaceIndentation: All
+IndentCaseLabels: Yes
+SortIncludes: true
+IncludeCategories:
+  - Regex:           '^".*'
+    Priority:        1
+  - Regex:           '^<.*\.(h|hh|hpp)>'
+    Priority:        2
+  - Regex:           '^<.*'
+    Priority:        3
+  - Regex:           '.*'
+    Priority:        4
+AlwaysBreakTemplateDeclarations: false
+BreakConstructorInitializers: BeforeComma
+...

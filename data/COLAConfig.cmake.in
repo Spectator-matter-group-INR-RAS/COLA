@@ -1,4 +1,6 @@
 @PACKAGE_INIT@
 
-include(@CMAKE_INSTALL_PREFIX@/lib/cmake/COLA/COLAExport.cmake)
+include(@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@/cmake/COLA/COLAExport.cmake)
+include(@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_DATAROOTDIR@/COLA/cmake/COLAQualityTools.cmake)
+
 set_and_check(COLA_DIR @CMAKE_INSTALL_PREFIX@)

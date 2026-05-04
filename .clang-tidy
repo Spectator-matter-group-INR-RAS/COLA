@@ -1,0 +1,92 @@
+
+---
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*'
+ExcludeHeaderFilterRegex: '^(.*/)?tinyxml2/.*'
+FormatStyle: 'file'
+UseColor: true
+SystemHeaders: false
+
+Checks: >
+  abseil-*,
+  bugprone-*,
+  google-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -bugprone-exception-escape,
+  -google-runtime-references,
+  -google-build-using-namespace,
+  -google-readability-todo,
+  -misc-non-private-member-variables-in-classes,
+  -misc-const-correctness,
+  -modernize-return-braced-init-list,
+  -modernize-use-trailing-return-type,
+  -modernize-concat-nested-namespaces,
+  -modernize-use-nodiscard,
+  -modernize-unary-static-assert,
+  -modernize-use-constraints,
+  -performance-move-const-arg,
+  -performance-avoid-endl,
+  -performance-enum-size,
+  -readability-magic-numbers,
+  -readability-redundant-declaration,
+  -readability-function-cognitive-complexity,
+  -readability-math-missing-parentheses,
+  -readability-uppercase-literal-suffix,
+  -bugprone-narrowing-conversions,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-inc-dec-in-conditions,
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-unchecked-optional-access,
+  -bugprone-unused-local-non-trivial-variable,
+
+CheckOptions:
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: CamelCase
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassMemberSuffix
+    value: _
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumConstantPrefix
+    value: k
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConstexprVariablePrefix
+    value: k
+  - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: false
+  - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
+    value: false
+  - key: readability-const-return-type.IgnoreMacros
+    value: false
+  - key: readability-identifier-length.MinimumVariableNameLength
+    value: 2
+  - key: readability-identifier-length.IgnoredVariableNames
+    value: '^(i|j|k|x|y|z|n|a|b)$'
+  - key: readability-identifier-length.MinimumParameterNameLength
+    value: 2
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: '^(i|j|k|x|y|z|n|a|b)$'
+  - key: readability-identifier-length.MinimumLoopCounterNameLength
+    value: 3
+  - key: readability-identifier-length.IgnoredLoopCounterNames
+    value: '^(i|j|k|n)$'
+  - key: readability-identifier-length.MinimumExceptionNameLength
+    value: 3
+  - key: readability-identifier-length.IgnoredExceptionVariableNames
+    value: '^(e|ex)$'
+  - key: misc-include-cleaner.MissingIncludes
+    value: false
