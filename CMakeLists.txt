@@ -55,7 +55,7 @@ set_target_properties(
 )
 
 # Check for COLA_FETCH_MODE to prevent install instructions from generating
-if (NOT COLA_FETCH_MODE)
+if (NOT $ENV{COLA_FETCH_MODE})
 
     include(GNUInstallDirs)
     include(CMakePackageConfigHelpers)
