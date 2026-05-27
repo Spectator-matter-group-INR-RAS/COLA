@@ -54,56 +54,61 @@ set_target_properties(
                CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
 )
 
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
+# Check for COLA_FETCH_MODE to prevent install instructions from generating
+if (NOT DEFINED ENV{COLA_FETCH_MODE})
 
-install(
-    TARGETS COLA
-    EXPORT COLAExport
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    INCLUDES
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+    include(GNUInstallDirs)
+    include(CMakePackageConfigHelpers)
 
-configure_package_config_file(
-    "${PROJECT_SOURCE_DIR}/data/COLAConfig.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA
-)
+    install(
+        TARGETS COLA
+        EXPORT COLAExport
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        INCLUDES
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake COMPATIBILITY AnyNewerVersion
-)
+    configure_package_config_file(
+        "${PROJECT_SOURCE_DIR}/data/COLAConfig.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA
+    )
 
-install(EXPORT COLAExport DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA)
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake COMPATIBILITY AnyNewerVersion
+    )
 
-# install(
-#     DIRECTORY ${PROJECT_SOURCE_DIR}/COLA
-#     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-#     FILES_MATCHING
-#     PATTERN "*.hh"
-# )
+    install(EXPORT COLAExport DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA
-)
+    # install(
+    #     DIRECTORY ${PROJECT_SOURCE_DIR}/COLA
+    #     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    #     FILES_MATCHING
+    #     PATTERN "*.hh"
+    # )
 
-install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh"
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
-)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/COLAConfig.cmake"
+                  "${CMAKE_CURRENT_BINARY_DIR}/COLAConfigVersion.cmake"
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/COLA
+    )
 
-install(
-    DIRECTORY cmake/
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/COLA/cmake
-    FILES_MATCHING
-    PATTERN "*.cmake"
-)
+    install(FILES "${PROJECT_SOURCE_DIR}/data/config.sh"
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
+    )
 
-enable_testing()
-if (BUILD_TESTING)
-    add_subdirectory(tests)
+    install(
+        DIRECTORY cmake/
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/COLA/cmake
+        FILES_MATCHING
+        PATTERN "*.cmake"
+    )
+
+    enable_testing()
+    if (BUILD_TESTING)
+        add_subdirectory(tests)
+    endif ()
+
+    include(cmake/COLAQualityTools.cmake)
+    setup_cola_quality_tools(EXCLUDE_PATTERNS ".*/tinyxml2/.*")
 endif ()
-
-include(cmake/COLAQualityTools.cmake)
-setup_cola_quality_tools(EXCLUDE_PATTERNS ".*/tinyxml2/.*")
