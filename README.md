@@ -34,4 +34,4 @@ Generated documentation will be located in the ```docs/compiled/``` folder.
 
 ## COLA Modules
 
-Currently there is only a [minimal module + program example](https://github.com/apBUSampK/COLA-min-example) with some guidelines on module writing.
+Currently there is a [minimal module + program example](https://github.com/apBUSampK/COLA-min-example) with some guidelines on module writing, as well as [AAMCC-COLA](https://github.com/Spectator-matter-group-INR-RAS/AAMCC-COLA), a COLA implementation of AAMCC-MST model, along with relevant modules.
