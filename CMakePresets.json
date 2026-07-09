@@ -79,13 +79,13 @@
         {
             "name": "clang-tidy-check",
             "displayName": "Check clang-tidy",
-            "configurePreset": "default",
+            "configurePreset": "default-test",
 	    "targets": ["clang-tidy-check"]
         },
         {
             "name": "tidy-fix",
             "displayName": "Check and fix clang-tidy",
-            "configurePreset": "default",
+            "configurePreset": "default-test",
 	    "targets": ["clang-tidy-fix"]
         },
         {
@@ -115,7 +115,7 @@
         {
             "name": "format-check",
             "displayName": "Check all linters",
-            "configurePreset": "default",
+            "configurePreset": "default-test",
             "targets": [
                 "clang-format-check",
                 "cmake-format-check",
@@ -125,7 +125,7 @@
         {
             "name": "format-fix",
             "displayName": "Fix all linters",
-            "configurePreset": "default",
+            "configurePreset": "default-test",
             "targets": [
                 "clang-format-fix",
                 "cmake-format-fix",
@@ -204,7 +204,7 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "default"
+                    "name": "default-test"
                 },
                 {
                     "type": "build",
@@ -218,7 +218,7 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "default"
+                    "name": "default-test"
                 },
                 {
                     "type": "build",
