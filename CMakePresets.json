@@ -46,9 +46,9 @@
                 "BUILD_TESTING": "ON"
             }
         },
-        {
-            "name": "tidy",
-            "displayName": "Clang-tidy",
+	{
+            "name": "default-test",
+            "displayName": "Default with Tests",
             "inherits": "default",
             "cacheVariables": {
                 "BUILD_TESTING": "ON"
@@ -71,58 +71,65 @@
             "displayName": "Release Test Build",
             "configurePreset": "release-test"
         },
+	{
+            "name": "default-test",
+            "displayName": "Default with Tests",
+            "configurePreset": "default-test"
+        },
         {
-            "name": "tidy",
-            "displayName": "Tidy Build",
-            "configurePreset": "tidy",
+            "name": "clang-tidy-check",
+            "displayName": "Check clang-tidy",
+            "configurePreset": "default",
 	    "targets": ["clang-tidy-check"]
         },
         {
             "name": "tidy-fix",
-            "displayName": "Tidy fix Build",
-            "configurePreset": "tidy",
+            "displayName": "Check and fix clang-tidy",
+            "configurePreset": "default",
 	    "targets": ["clang-tidy-fix"]
         },
         {
             "name": "clang-format-check",
             "displayName": "Check clang-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["clang-format-check"]
         },
         {
             "name": "clang-format-fix",
             "displayName": "Fix clang-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["clang-format-fix"]
         },
         {
             "name": "cmake-format-check",
             "displayName": "Check cmake-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["cmake-format-check"]
         },
         {
             "name": "cmake-format-fix",
             "displayName": "Fix cmake-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["cmake-format-fix"]
         },
         {
             "name": "format-check",
             "displayName": "Check all linters",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": [
                 "clang-format-check",
-                "cmake-format-check"
+                "cmake-format-check",
+		"clang-tidy-check"
             ]
         },
         {
             "name": "format-fix",
             "displayName": "Fix all linters",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": [
                 "clang-format-fix",
-                "cmake-format-fix"
+                "cmake-format-fix",
+		"clang-tidy-fix"
             ]
         },
         {
@@ -144,7 +151,7 @@
         {
             "name": "default",
             "displayName": "Run Debug Tests",
-            "configurePreset": "tidy",
+            "configurePreset": "default-test",
             "output": {
                 "outputOnFailure": true
             }
@@ -174,16 +181,16 @@
             ]
         },
         {
-            "name": "test",
-            "displayName": "Test Workflow (with cnlang-tidy checks)",
+            "name": "default-test",
+            "displayName": "Test Workflow",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "tidy"
+                    "name": "default-test"
                 },
                 {
                     "type": "build",
-                    "name": "tidy"
+                    "name": "default-test"
                 },
                 {
                     "type": "test",
@@ -197,7 +204,7 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "tidy"
+                    "name": "default"
                 },
                 {
                     "type": "build",
@@ -211,7 +218,7 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "tidy"
+                    "name": "default"
                 },
                 {
                     "type": "build",
