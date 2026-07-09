@@ -51,17 +51,7 @@
             "displayName": "Clang-tidy",
             "inherits": "default",
             "cacheVariables": {
-                "BUILD_TESTING": "ON",
-                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy"
-            }
-        },
-        {
-            "name": "tidy-fix",
-            "displayName": "Clang-tidy fix",
-            "inherits": "default",
-            "cacheVariables": {
-                "BUILD_TESTING": "ON",
-                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy;--fix"
+                "BUILD_TESTING": "ON"
             }
         }
     ],
@@ -84,12 +74,14 @@
         {
             "name": "tidy",
             "displayName": "Tidy Build",
-            "configurePreset": "tidy"
+            "configurePreset": "tidy",
+	    "targets": ["clang-tidy-check"]
         },
         {
             "name": "tidy-fix",
             "displayName": "Tidy fix Build",
-            "configurePreset": "tidy-fix"
+            "configurePreset": "tidy",
+	    "targets": ["clang-tidy-fix"]
         },
         {
             "name": "clang-format-check",
@@ -116,7 +108,7 @@
             "targets": ["cmake-format-fix"]
         },
         {
-            "name": "check-format",
+            "name": "format-check",
             "displayName": "Check all linters",
             "configurePreset": "tidy",
             "targets": [
@@ -125,13 +117,27 @@
             ]
         },
         {
-            "name": "fix-format",
+            "name": "format-fix",
             "displayName": "Fix all linters",
             "configurePreset": "tidy",
             "targets": [
                 "clang-format-fix",
                 "cmake-format-fix"
             ]
+        },
+        {
+            "name": "default-install",
+            "displayName": "Install the default configuration",
+            "configurePreset": "default",
+            "inherits": "default",
+            "targets": ["install"]
+        },
+        {
+            "name": "release-install",
+            "displayName": "Install the release configuration",
+            "configurePreset": "release",
+            "inherits": "release",
+            "targets": ["install"]
         }
     ],
     "testPresets": [
@@ -169,7 +175,7 @@
         },
         {
             "name": "test",
-            "displayName": "Test Workflow (with linter checks)",
+            "displayName": "Test Workflow (with cnlang-tidy checks)",
             "steps": [
                 {
                     "type": "configure",
@@ -186,7 +192,7 @@
             ]
         },
         {
-            "name": "check-format",
+            "name": "format-check",
             "displayName": "Check All Linters Workflow",
             "steps": [
                 {
@@ -195,12 +201,12 @@
                 },
                 {
                     "type": "build",
-                    "name": "check-format"
+                    "name": "format-check"
                 }
             ]
         },
         {
-            "name": "fix-format",
+            "name": "format-fix",
             "displayName": "Fix All Linters Workflow",
             "steps": [
                 {
@@ -209,7 +215,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "fix-format"
+                    "name": "format-fix"
                 }
             ]
         },

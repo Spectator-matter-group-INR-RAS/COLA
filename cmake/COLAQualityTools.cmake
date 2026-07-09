@@ -55,7 +55,7 @@ function (setup_cola_quality_tools)
 
         add_custom_target(
             clang-tidy-fix
-            COMMAND ${CLANG_TIDY_EXE} -p ${CMAKE_BINARY_DIR} -fix ${CPP_SOURCES}
+            COMMAND ${CLANG_TIDY_EXE} -p ${CMAKE_BINARY_DIR} --fix ${CPP_SOURCES}
             COMMENT "Run clang-tidy with fixes"
         )
         message(STATUS "clang-tidy: ${CLANG_TIDY_EXE}")
