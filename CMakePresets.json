@@ -46,22 +46,12 @@
                 "BUILD_TESTING": "ON"
             }
         },
-        {
-            "name": "tidy",
-            "displayName": "Clang-tidy",
+	{
+            "name": "default-test",
+            "displayName": "Default with Tests",
             "inherits": "default",
             "cacheVariables": {
-                "BUILD_TESTING": "ON",
-                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy"
-            }
-        },
-        {
-            "name": "tidy-fix",
-            "displayName": "Clang-tidy fix",
-            "inherits": "default",
-            "cacheVariables": {
-                "BUILD_TESTING": "ON",
-                "COLA_CMAKE_CXX_CLANG_TIDY": "clang-tidy;--fix"
+                "BUILD_TESTING": "ON"
             }
         }
     ],
@@ -81,64 +71,87 @@
             "displayName": "Release Test Build",
             "configurePreset": "release-test"
         },
+	{
+            "name": "default-test",
+            "displayName": "Default with Tests",
+            "configurePreset": "default-test"
+        },
         {
-            "name": "tidy",
-            "displayName": "Tidy Build",
-            "configurePreset": "tidy"
+            "name": "clang-tidy-check",
+            "displayName": "Check clang-tidy",
+            "configurePreset": "default-test",
+	    "targets": ["clang-tidy-check"]
         },
         {
             "name": "tidy-fix",
-            "displayName": "Tidy fix Build",
-            "configurePreset": "tidy-fix"
+            "displayName": "Check and fix clang-tidy",
+            "configurePreset": "default-test",
+	    "targets": ["clang-tidy-fix"]
         },
         {
             "name": "clang-format-check",
             "displayName": "Check clang-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["clang-format-check"]
         },
         {
             "name": "clang-format-fix",
             "displayName": "Fix clang-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["clang-format-fix"]
         },
         {
             "name": "cmake-format-check",
             "displayName": "Check cmake-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["cmake-format-check"]
         },
         {
             "name": "cmake-format-fix",
             "displayName": "Fix cmake-format",
-            "configurePreset": "tidy",
+            "configurePreset": "default",
             "targets": ["cmake-format-fix"]
         },
         {
-            "name": "check-format",
+            "name": "format-check",
             "displayName": "Check all linters",
-            "configurePreset": "tidy",
+            "configurePreset": "default-test",
             "targets": [
                 "clang-format-check",
-                "cmake-format-check"
+                "cmake-format-check",
+		"clang-tidy-check"
             ]
         },
         {
-            "name": "fix-format",
+            "name": "format-fix",
             "displayName": "Fix all linters",
-            "configurePreset": "tidy",
+            "configurePreset": "default-test",
             "targets": [
                 "clang-format-fix",
-                "cmake-format-fix"
+                "cmake-format-fix",
+		"clang-tidy-fix"
             ]
+        },
+        {
+            "name": "default-install",
+            "displayName": "Install the default configuration",
+            "configurePreset": "default",
+            "inherits": "default",
+            "targets": ["install"]
+        },
+        {
+            "name": "release-install",
+            "displayName": "Install the release configuration",
+            "configurePreset": "release",
+            "inherits": "release",
+            "targets": ["install"]
         }
     ],
     "testPresets": [
         {
             "name": "default",
             "displayName": "Run Debug Tests",
-            "configurePreset": "tidy",
+            "configurePreset": "default-test",
             "output": {
                 "outputOnFailure": true
             }
@@ -168,16 +181,16 @@
             ]
         },
         {
-            "name": "test",
-            "displayName": "Test Workflow (with linter checks)",
+            "name": "default-test",
+            "displayName": "Test Workflow",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "tidy"
+                    "name": "default-test"
                 },
                 {
                     "type": "build",
-                    "name": "tidy"
+                    "name": "default-test"
                 },
                 {
                     "type": "test",
@@ -186,30 +199,30 @@
             ]
         },
         {
-            "name": "check-format",
+            "name": "format-check",
             "displayName": "Check All Linters Workflow",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "tidy"
+                    "name": "default-test"
                 },
                 {
                     "type": "build",
-                    "name": "check-format"
+                    "name": "format-check"
                 }
             ]
         },
         {
-            "name": "fix-format",
+            "name": "format-fix",
             "displayName": "Fix All Linters Workflow",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "tidy"
+                    "name": "default-test"
                 },
                 {
                     "type": "build",
-                    "name": "fix-format"
+                    "name": "format-fix"
                 }
             ]
         },

@@ -24,13 +24,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install dependencies (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-19
+          sudo apt-get install -y build-essential cmake libgtest-dev g++ clang-format-20 clang-tidy-20
           pip install cmake-format
 
       - name: Install dependencies (macOS)
@@ -43,14 +43,8 @@ jobs:
         run: |
           cmake --workflow release-test
 
-      - name: Clang-tidy
-        id: clang-tidy
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          cmake --workflow test
-
       - name: Check formatting
         id: check-format
         if: always() && matrix.os == 'ubuntu-latest'
         run: |
-          cmake --workflow check-format
+          cmake --workflow format-check

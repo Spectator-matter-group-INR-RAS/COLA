@@ -20,10 +20,11 @@
 #ifndef COLA_LORENTZVECTOR_HH
 #define COLA_LORENTZVECTOR_HH
 
+#include <sys/types.h>
+
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <cstdint>
 #include <iostream>
 #include <stdexcept>
 #include <type_traits>
