@@ -5,9 +5,9 @@ function (setup_cola_quality_tools)
     set(EXCLUDE_PATTERNS ${DEFAULT_EXCLUDE_PATTERNS} ${QUALITY_EXCLUDE_PATTERNS})
 
     find_program(
-        CLANG_FORMAT_EXE NAMES clang-format-21 clang-format-20 clang-format-19 clang-format
+        CLANG_FORMAT_EXE NAMES clang-format clang-format-20
     )
-    find_program(CLANG_TIDY_EXE NAMES clang-tidy-21 clang-tidy-20 clang-tidy-19 clang-tidy)
+    find_program(CLANG_TIDY_EXE NAMES clang-tidy clang-tidy-20)
     find_program(CMAKE_FORMAT_EXE NAMES cmake-format)
 
     file(
