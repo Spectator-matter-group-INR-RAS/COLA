@@ -1,3 +1,6 @@
+# Resolve beside this module, including when it is used by an installed COLA consumer.
+set(_COLA_UNINSTALL_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/uninstall.cmake")
+
 function (setup_cola_quality_tools)
     cmake_parse_arguments(QUALITY "" "" "EXCLUDE_PATTERNS" ${ARGN})
 
@@ -79,16 +82,10 @@ function (setup_cola_quality_tools)
 
     add_custom_target(
         uninstall
-        COMMAND
-            bash -c "
-            if [ -f ${CMAKE_BINARY_DIR}/install_manifest.txt ]; then
-                cat ${CMAKE_BINARY_DIR}/install_manifest.txt | xargs rm -f
-                echo 'Uninstall completed'
-            else
-                echo 'No install_manifest.txt found'
-            fi
-        "
+        COMMAND ${CMAKE_COMMAND} "-DCOLA_INSTALL_MANIFEST=${CMAKE_BINARY_DIR}/install_manifest.txt"
+                -P "${_COLA_UNINSTALL_SCRIPT}"
         COMMENT "Uninstalling project"
+        VERBATIM
     )
 
 endfunction ()

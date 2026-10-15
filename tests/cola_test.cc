@@ -28,6 +28,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -115,6 +116,71 @@ class TestWriter : public VWriter {
     recorded_events.emplace_back(std::move(data));
   }
 };
+
+namespace {
+
+  class ConfiguredConverter : public VConverter {
+   public:
+    // GenericFactory requires a std::string name, matching the other test filters.
+    // NOLINTNEXTLINE(bugprone-throwing-static-initialization)
+    static inline const std::string kName = "ConfiguredConverter";
+
+    explicit ConfiguredConverter(const std::unordered_map<std::string, std::string>& parameters)
+        : factor_(std::stod(parameters.at("factor"))) {}
+
+    std::unique_ptr<EventData> operator()(std::unique_ptr<EventData>&& data) override {
+      for (auto& particle : data->particles) {
+        particle.momentum.x *= factor_;
+      }
+      return std::move(data);
+    }
+
+   private:
+    double factor_;
+  };
+
+  class OptionalConfiguredConverter : public ConfiguredConverter {
+   public:
+    OptionalConfiguredConverter() : ConfiguredConverter({{"factor", "1"}}) {}
+    using ConfiguredConverter::ConfiguredConverter;
+  };
+
+}  // namespace
+
+TEST(ColaFactory, MetadataConstructorPreferredOverDefault) {
+  GenericFactory<OptionalConfiguredConverter> factory;
+  auto filter = factory.Create({{"factor", "3"}});
+  auto* converter = dynamic_cast<VConverter*>(filter.get());
+  ASSERT_NE(converter, nullptr);
+  TestGenerator generator;
+  const auto result = (*converter)(generator());
+  EXPECT_DOUBLE_EQ(result->particles[0].momentum.x, 0.1 * 3);
+}
+
+TEST(ColaFactory, InvalidMetadataPropagates) {
+  GenericFactory<ConfiguredConverter> factory;
+  EXPECT_THROW(factory.Create({}), std::out_of_range);
+  EXPECT_THROW(factory.Create({{"factor", "invalid"}}), std::invalid_argument);
+}
+
+TEST(ColaFactory, XmlConfiguresNonDefaultConstructibleFilter) {
+  auto xml = std::stringstream(R"(<root>
+      <generator name="TestGenerator"/>
+      <converter name="ConfiguredConverter" factor="4"/>
+      <writer name="TestWriter"/>
+    </root>)");
+  MetaProcessor processor;
+  processor.Register(std::make_unique<GenericFactory<TestGenerator>>());
+  processor.Register(std::make_unique<GenericFactory<ConfiguredConverter>>());
+  processor.Register(std::make_unique<GenericFactory<TestWriter>>());
+  auto ensemble = processor.Parse(xml);
+  auto* writer = dynamic_cast<TestWriter*>(ensemble.writer.get());
+  ASSERT_NE(writer, nullptr);
+  ColaRunManager manager(std::move(ensemble));
+  manager.Run();
+  ASSERT_EQ(writer->recorded_events.size(), 1);
+  EXPECT_DOUBLE_EQ(writer->recorded_events[0]->particles[0].momentum.x, 0.4);
+}
 
 TEST(ColaPdgTest, CircularConsistency) {
   for (uint16_t atomic_mass = 1; atomic_mass < 100; ++atomic_mass) {
