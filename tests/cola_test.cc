@@ -121,7 +121,6 @@ namespace {
 
   class ConfiguredConverter : public VConverter {
    public:
-    // GenericFactory requires a std::string name, matching the other test filters.
     // NOLINTNEXTLINE(bugprone-throwing-static-initialization)
     static inline const std::string kName = "ConfiguredConverter";
 

@@ -34,12 +34,4 @@ Generated documentation will be located in the ```docs/compiled/``` folder.
 
 ## COLA Modules
 
-`GenericFactory<Filter>` passes XML attributes to a filter constructor accepting
-`const std::unordered_map<std::string, std::string>&`, when available. Otherwise,
-it uses the default constructor. If both constructors exist, the metadata constructor
-takes precedence; validation errors from the constructor propagate to the caller.
-
-The `uninstall` build target removes files listed in the build's `install_manifest.txt`.
-It supports paths containing spaces and uses `DESTDIR` when uninstalling a staged installation.
-
 Currently there is a [minimal module + program example](https://github.com/apBUSampK/COLA-min-example) with some guidelines on module writing, as well as [AAMCC-COLA](https://github.com/Spectator-matter-group-INR-RAS/AAMCC-COLA), a COLA implementation of AAMCC-MST model, along with relevant modules.

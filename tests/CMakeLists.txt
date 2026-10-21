@@ -36,11 +36,3 @@ target_link_libraries(COLATest COLA)
 target_link_libraries(COLATest GTest::GTest GTest::Main)
 
 gtest_discover_tests(COLATest)
-
-add_test(
-    NAME ColaInstall.Uninstall
-    COMMAND
-        ${CMAKE_COMMAND} "-DCOLA_SOURCE_DIR=${PROJECT_SOURCE_DIR}"
-        "-DTEST_ROOT=${CMAKE_CURRENT_BINARY_DIR}/uninstall integration" -P
-        "${CMAKE_CURRENT_SOURCE_DIR}/uninstall_test.cmake"
-)

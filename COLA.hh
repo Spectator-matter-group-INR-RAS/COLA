@@ -193,7 +193,6 @@ namespace cola {
                     "kName variable must be a string");
     }
 
-    // Prefer the metadata constructor when available; keep default-only filters compatible.
     std::unique_ptr<VFilter> Create(const std::unordered_map<std::string, std::string>& meta_data) override {
       if constexpr (std::is_constructible_v<Filter, decltype(meta_data)>) {
         return std::make_unique<Filter>(meta_data);
