@@ -4,11 +4,9 @@ function (setup_cola_quality_tools)
     set(DEFAULT_EXCLUDE_PATTERNS ".*/build/.*" ".*/third_party/.*" ".*/external/.*")
     set(EXCLUDE_PATTERNS ${DEFAULT_EXCLUDE_PATTERNS} ${QUALITY_EXCLUDE_PATTERNS})
 
-    find_program(
-        CLANG_FORMAT_EXE NAMES clang-format clang-format-20
-    )
+    find_program(CLANG_FORMAT_EXE NAMES clang-format clang-format-20)
     find_program(CLANG_TIDY_EXE NAMES clang-tidy clang-tidy-20)
-    find_program(CMAKE_FORMAT_EXE NAMES cmake-format)
+    find_program(CMAKE_FORMAT_EXE NAMES cmake-format cmake-format-0.6.13)
 
     file(
         GLOB_RECURSE
