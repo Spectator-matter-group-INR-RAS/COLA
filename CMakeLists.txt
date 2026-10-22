@@ -38,11 +38,6 @@ target_include_directories(
 
 target_link_libraries(COLA PRIVATE tinyxml2)
 
-set(COLA_CMAKE_CXX_CLANG_TIDY
-    ""
-    CACHE STRING "variable will be passed to CMAKE_CXX_CLANG_TIDY of COLA target"
-)
-
 # Public headers for proper target installation
 set(COLA_PUBLIC_HEADERS "COLA.hh" "COLA/EventData.hh" "COLA/LorentzVector.hh")
 
@@ -51,7 +46,6 @@ set_target_properties(
     PROPERTIES PUBLIC_HEADER "${COLA_PUBLIC_HEADERS}"
                VERSION "${COLA_VERSION}"
                SOVERSION "${COLA_VERSION_MAJOR}"
-               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
 )
 
 # Check for COLA_FETCH_MODE to prevent install instructions from generating
